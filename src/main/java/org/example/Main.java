@@ -26,19 +26,15 @@ public class Main extends JFrame {
     private ArrayList<Point> solutionPoints;
 
     public Main() {
-        points = Point.createRandomPoints(30);
+        points = Point.createRandomPoints(100);
         QuasiOptimalAlgorithm quasiOptimalAlgorithm = new QuasiOptimalAlgorithm(points);
         convexHullPoints = quasiOptimalAlgorithm.getConvexHull();
         solutionPoints =
-                //*///
-                NearestNeighbourAlgorithm.getTSPSolution(points);
-                /*/
+                //NearestNeighbourAlgorithm.getTSPSolution(points);
+                //
                 quasiOptimalAlgorithm.getTSPSolution();
-                /*/
+                //
                 //GrahamAlgorithm.convexHullFinder(points);
-                //*///
-
-        quasiOptimalAlgorithm.printPointsOrder();
 
         createPointConnections(solutionPoints,"RESULT");
         createPointConnections(convexHullPoints, "CH");
@@ -115,39 +111,3 @@ public class Main extends JFrame {
         chart.setVisible( true );
     }
 }
-
-
-
-/*public class MainQuasiOptimal extends Application {
-    public MainQuasiOptimal()
-    {
-        System.out.println("Konstruktor");
-    }
-
-    public static void main(String[] args) {
-        launch();
-    }
-
-    @Override
-    public void start(Stage stage) throws Exception {
-        stage.setTitle("Scatter Chart Sample");
-        final NumberAxis xAxis = new NumberAxis(0, 100, 1);
-        final NumberAxis yAxis = new NumberAxis(0, 100, 1);
-        final ScatterChart<Number,Number> sc = new ScatterChart<Number,Number>(xAxis,yAxis);
-        xAxis.setLabel("x");
-        yAxis.setLabel("y");
-        sc.setTitle("Travelling Salesman Problem Solution");
-
-        XYChart.Series points = new XYChart.Series();
-        points.setName("Points");
-        ArrayList<Point> convexHull = TSPSolver.getSolution(TSPSolver.createPoints(7));
-        for(int i=0; i<convexHull.size();++i)
-        {
-            points.getData().add(i,new XYChart.Data(convexHull.get(i).x, convexHull.get(i).y, new String(i+"")));
-        }
-        sc.getData().addAll(points);
-        Scene scene  = new Scene(sc, 700, 700);
-        stage.setScene(scene);
-        stage.show();
-    }
-}*/

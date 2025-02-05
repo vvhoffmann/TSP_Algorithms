@@ -1,15 +1,12 @@
 package org.example;
+
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 
 public class QuasiOptimalAlgorithm {
     private final ArrayList<Point> points;
     private final ArrayList<Point> convexHull;
     private ArrayList<Point> resultPoints = new ArrayList<Point>();
-
-    private Map<Integer, Point> pointsOrder = new LinkedHashMap<>();
 
     public QuasiOptimalAlgorithm(ArrayList<Point> points) {
         this.points = points;
@@ -46,30 +43,46 @@ public class QuasiOptimalAlgorithm {
             int indB = -1;
             double d_min = -1;
             for (int p = 0; p < insidePoints.size(); ++p) {
-                Point point = insidePoints.get(p);
+                Point pointP = insidePoints.get(p);
                 for (int r = 0; r < resultPoints.size(); ++r) {
-                    int tmpA = r == 0 ? resultPoints.size() - 1 : r - 1; //result final location
-                    //a point b
-                    Point a = resultPoints.get(tmpA);
-                    Point b = resultPoints.get(r);
+                    int tmpA = r == 0 ? resultPoints.size() - 1 : r - 1; //result future location : pointA pointP pointB
+                    Point pointA = resultPoints.get(tmpA);
+                    Point pointB = resultPoints.get(r);
 
-                    Point projectionPoint = Point.projection(a, b, point);
-                    double APro = Point.distance(a, projectionPoint);
-                    double BPro = Point.distance(b, projectionPoint);
-                    double AP = Point.distance(a, point);
-                    double BP = Point.distance(b, point);
-                    double AB = Point.distance(a, b);
-                    double PPro = Point.distance(projectionPoint, point); // shortest way from point to segment lenght
+                    Point projectionPoint = Point.projection(pointA, pointB, pointP);
+                    double APro = Point.distance(pointA, projectionPoint);
+                    double BPro = Point.distance(pointB, projectionPoint);
+                    double AP = Point.distance(pointA, pointP);
+                    double BP = Point.distance(pointB, pointP);
+                    double AB = Point.distance(pointA, pointB);
+                    double PPro = Point.distance(projectionPoint, pointP); // shortest way from pointP to segment, length
 
-                    double distance = Math.min(APro, BPro);
+                    int tmpR = r;
+                    //if (AB * AB <= AP * AP + BP * BP) PPro = (AP + BP) / 2; //ten fragment pochodzi z notatek Pani Tatiany, jednak algorytm nie działa wtedy poprawnie i nie rozumiem za bardzo
+                    //zamiast tego
+                    if (APro + BPro > AB) { //punkt, którego projekcja nie przypada na odcinku AB
+                        int tmpIndex;
+                        //krótsze ramie może być takie samo dla 2 sąsiednich odcinków, więc należy sprawdzić, który z nich będzie lepszy dla punktu
+                        if (AP < BP) { //index od pointA -1
+                            tmpIndex = tmpA == 0 ? resultPoints.size() - 1 : tmpA - 1;
+                            if(PPro< Point.distance(pointP, Point.projection( resultPoints.get(tmpIndex),pointA, pointP)))
+                                tmpR = tmpIndex;
+                            else
+                                tmpR = r;
+                        } else { //index od pointB +1
+                            tmpIndex = (r == resultPoints.size() - 1) ? 0 : r + 1;
+                            if(PPro< Point.distance(pointP, Point.projection( pointB, resultPoints.get(tmpIndex), pointP)))
+                                tmpR = tmpIndex;
+                            else
+                                tmpR = r;
+                        }
+                        PPro = Math.min(AP, BP);
+                    }
 
-                    if (AB * AB <= AP * AP + BP * BP) PPro = (AP + BP) / 2; //przypadki spoza zakresu AB
-
-                    if (d_min < 0 || (d_min > PPro)) {
+                    if (d_min < 0 || (d_min > PPro )) {
                         d_min = PPro;
                         indP = p;
-                        indA = tmpA;
-                        indB = r;
+                        indB = tmpR;
                     }
                 }
             }
@@ -81,7 +94,6 @@ public class QuasiOptimalAlgorithm {
     }
 
     private void addPointtoTheRoad(int index, Point point) {
-        pointsOrder.put(points.indexOf(point), point);
         System.out.println("Dodaje Punkt " + points.indexOf(point) + " [" + point.x + ", " + point.y +
                 "] pod index " + index +
                 " pomiedzy punkt " + points.indexOf(resultPoints.get(index == 0 ? resultPoints.size() - 1 : index - 1)) +
@@ -95,7 +107,4 @@ public class QuasiOptimalAlgorithm {
         return convexHull;
     }
 
-    public void printPointsOrder() {
-        System.out.println(pointsOrder);
-    }
 }
