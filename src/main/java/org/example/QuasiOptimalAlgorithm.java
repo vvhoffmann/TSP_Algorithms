@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class QuasiOptimalAlgorithm {
     private final ArrayList<Point> points;
     private final ArrayList<Point> convexHull;
-    private ArrayList<Point> resultPoints = new ArrayList<Point>();
+    private ArrayList<Point> resultPoints = new ArrayList<>();
 
     public QuasiOptimalAlgorithm(ArrayList<Point> points) {
         this.points = points;
@@ -14,9 +14,8 @@ public class QuasiOptimalAlgorithm {
         resultPoints.addAll(convexHull);
 
         System.out.println("Graham Scan Convex Hull:");
-        for (int i = 0; i < convexHull.size(); ++i) {
+        for (int i = 0; i < convexHull.size(); ++i)
             System.out.print(points.indexOf(convexHull.get(i)) + ":" + convexHull.get(i) + ",  ");
-        }
         System.out.println();
     }
 
@@ -28,7 +27,7 @@ public class QuasiOptimalAlgorithm {
     }
 
     private ArrayList<Point> createPointsInsideArray() {
-        ArrayList<Point> pointsInside = new ArrayList<Point>(points);
+        ArrayList<Point> pointsInside = new ArrayList<>(points);
         pointsInside.removeAll(convexHull);
 
         return pointsInside;
@@ -39,7 +38,6 @@ public class QuasiOptimalAlgorithm {
     private ArrayList<Point> findPlaceForPoints(ArrayList<Point> insidePoints) {
         while (!insidePoints.isEmpty()) {
             int indP = 0;
-            int indA = -1;
             int indB = -1;
             double d_min = -1;
             for (int p = 0; p < insidePoints.size(); ++p) {
@@ -67,14 +65,10 @@ public class QuasiOptimalAlgorithm {
                             tmpIndex = tmpA == 0 ? resultPoints.size() - 1 : tmpA - 1;
                             if(PPro< Point.distance(pointP, Point.projection( resultPoints.get(tmpIndex),pointA, pointP)))
                                 tmpR = tmpIndex;
-                            else
-                                tmpR = r;
                         } else { //index od pointB +1
                             tmpIndex = (r == resultPoints.size() - 1) ? 0 : r + 1;
                             if(PPro< Point.distance(pointP, Point.projection( pointB, resultPoints.get(tmpIndex), pointP)))
                                 tmpR = tmpIndex;
-                            else
-                                tmpR = r;
                         }
                         PPro = Math.min(AP, BP);
                     }

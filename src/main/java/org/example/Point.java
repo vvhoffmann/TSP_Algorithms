@@ -10,7 +10,7 @@ public class Point extends Point2D.Double {
     }
 
     public static ArrayList<Point> createRandomPoints(int size) {
-        ArrayList<Point> arrayList = new ArrayList<Point>(size);
+        ArrayList<Point> arrayList = new ArrayList<>(size);
         Random random = new Random();
         for (int i = 0; i < size; ++i) {
             Point point = new Point(random.nextInt(100), random.nextInt(100));
