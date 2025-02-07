@@ -8,6 +8,9 @@ import java.util.*;
 
 /*
  * source: https://github.com/RonitRay/Ant-Colony-Optimization/blob/master/src/AntColonyOptimization.java
+ * https://www.baeldung.com/java-ant-colony-optimization#bd-introduction-2
+ *
+ *
  * private double c = 1.0;             //number of trails
  * private double alpha = 1;           //pheromone importance
  * private double beta = 5;            //distance priority
@@ -28,17 +31,17 @@ public class AntColonyOptimization
     private final double antFactor = 0.5;
     private final double randomFactor = 0.01;  //introducing randomness
 
-    private int maxIterations = 1000;
+    private final int maxIterations = 1000;
 
     private ArrayList<Point> points;
 
-    private int numberOfCities;
-    private int numberOfAnts;
-    private double graph[][];
-    private double trails[][];
+    private final int numberOfPoints;
+    private final int numberOfAnts;
+    private final double[][] graph;
+    private final double[][] trails;
     private List<Ant> ants = new ArrayList<>();
-    private Random random = new Random();
-    private double probabilities[];
+    private final Random random = new Random();
+    private final double[] probabilities;
 
     private int currentIndex;
 
@@ -49,14 +52,14 @@ public class AntColonyOptimization
     {
         this.points = points;
         graph = generateMatrix(points);
-        numberOfCities = points.size();
-        numberOfAnts = (int) (numberOfCities * antFactor);
+        numberOfPoints = points.size();
+        numberOfAnts = (int) (numberOfPoints * antFactor);
 
-        trails = new double[numberOfCities][numberOfCities];
-        probabilities = new double[numberOfCities];
+        trails = new double[numberOfPoints][numberOfPoints];
+        probabilities = new double[numberOfPoints];
         
         for(int i=0;i<numberOfAnts;i++)
-            ants.add(new Ant(numberOfCities));
+            ants.add(new Ant(numberOfPoints));
     }
 
     /**
@@ -129,7 +132,7 @@ public class AntColonyOptimization
             for(Ant ant:ants)
             {
                 ant.clear();
-                ant.visitCity(-1, random.nextInt(numberOfCities));
+                ant.visitCity(-1, random.nextInt(numberOfPoints));
             }
         }
         currentIndex = 0;
@@ -140,7 +143,7 @@ public class AntColonyOptimization
      */
     private void moveAnts() 
     {
-        for(int i=currentIndex;i<numberOfCities-1;i++)
+        for(int i=currentIndex;i<numberOfPoints-1;i++)
         {
             for(Ant ant:ants)
             {
@@ -155,11 +158,11 @@ public class AntColonyOptimization
      */
     private int selectNextCity(Ant ant) 
     {
-        int t = random.nextInt(numberOfCities - currentIndex);
+        int t = random.nextInt(numberOfPoints - currentIndex);
         if (random.nextDouble() < randomFactor)
         {
             int cityIndex=-999;
-            for(int i=0;i<numberOfCities;i++)
+            for(int i=0;i<numberOfPoints;i++)
             {
                 if(i==t && !ant.visited(i))
                 {
@@ -173,13 +176,13 @@ public class AntColonyOptimization
         calculateProbabilities(ant);
         double r = random.nextDouble();
         double total = 0;
-        for (int i = 0; i < numberOfCities; i++) 
+        for (int i = 0; i < numberOfPoints; i++) 
         {
             total += probabilities[i];
             if (total >= r) 
                 return i;
         }
-        throw new RuntimeException("There are no other cities");
+        throw new RuntimeException("There are no other Points");
     }
 
     /**
@@ -189,12 +192,12 @@ public class AntColonyOptimization
     {
         int i = ant.trail[currentIndex];
         double pheromone = 0.0;
-        for (int l = 0; l < numberOfCities; l++) 
+        for (int l = 0; l < numberOfPoints; l++) 
         {
             if (!ant.visited(l)) 
                 pheromone += Math.pow(trails[i][l], alpha) * Math.pow(1.0 / graph[i][l], beta);
         }
-        for (int j = 0; j < numberOfCities; j++) 
+        for (int j = 0; j < numberOfPoints; j++) 
         {
             if (ant.visited(j)) 
                 probabilities[j] = 0.0;
@@ -211,17 +214,17 @@ public class AntColonyOptimization
      */
     private void updateTrails() 
     {
-        for (int i = 0; i < numberOfCities; i++) 
+        for (int i = 0; i < numberOfPoints; i++) 
         {
-            for (int j = 0; j < numberOfCities; j++)
+            for (int j = 0; j < numberOfPoints; j++)
                 trails[i][j] *= evaporation;
         }
         for (Ant a : ants) 
         {
             double contribution = Q / a.trailLength(graph);
-            for (int i = 0; i < numberOfCities - 1; i++)
+            for (int i = 0; i < numberOfPoints - 1; i++)
                 trails[a.trail[i]][a.trail[i + 1]] += contribution;
-            trails[a.trail[numberOfCities - 1]][a.trail[0]] += contribution;
+            trails[a.trail[numberOfPoints - 1]][a.trail[0]] += contribution;
         }
     }
 
@@ -251,9 +254,9 @@ public class AntColonyOptimization
      */
     private void clearTrails() 
     {
-        for(int i=0;i<numberOfCities;i++)
+        for(int i=0;i<numberOfPoints;i++)
         {
-            for(int j=0;j<numberOfCities;j++)
+            for(int j=0;j<numberOfPoints;j++)
                 trails[i][j]=c;
         }
     }
