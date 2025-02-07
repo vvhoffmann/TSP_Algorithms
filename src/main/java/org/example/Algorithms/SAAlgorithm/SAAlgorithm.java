@@ -4,6 +4,8 @@ import org.example.Point;
 
 import java.util.ArrayList;
 
+//source: https://www.baeldung.com/java-simulated-annealing-for-traveling-salesman#bd-overview-1
+
 public class SAAlgorithm {
     private static double startingTemperature = 10;
     private static int numberOfIterations =500;
