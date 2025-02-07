@@ -1,4 +1,4 @@
-import org.example.GrahamAlgorithm;
+import org.example.Algorithms.QuasiOptimalAlgorithm.GrahamAlgorithm;
 import org.example.Point;
 import org.junit.Assert;
 import org.junit.Test;

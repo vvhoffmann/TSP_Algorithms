@@ -1,4 +1,6 @@
-package org.example;
+package org.example.Algorithms.QuasiOptimalAlgorithm;
+
+import org.example.Point;
 
 import java.util.ArrayList;
 import java.util.Collections;

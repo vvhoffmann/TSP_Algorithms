@@ -1,6 +1,9 @@
 package org.example;
 
 
+import org.example.Algorithms.AntColony.AntColonyOptimization;
+import org.example.Algorithms.QuasiOptimalAlgorithm.QuasiOptimalAlgorithm;
+import org.example.Algorithms.SAAlgorithm.SAAlgorithm;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -26,13 +29,22 @@ public class Main extends JFrame {
     private ArrayList<Point> solutionPoints;
 
     public Main() {
-        points = Point.createRandomPoints(100);
+        points = Point.getReadyPoints(); //createRandomPoints(100);
         QuasiOptimalAlgorithm quasiOptimalAlgorithm = new QuasiOptimalAlgorithm(points);
+        AntColonyOptimization antColonyOptimization = new AntColonyOptimization(points);
         convexHullPoints = quasiOptimalAlgorithm.getConvexHull();
         solutionPoints =
+                //HeldKarpAlgorithm.getTSPSolution(points);
+                //
                 //NearestNeighbourAlgorithm.getTSPSolution(points);
                 //
-                quasiOptimalAlgorithm.getTSPSolution();
+                //NearestNeighbourAlgorithm.getTSPSolutionKK(points);
+                //
+                //antColonyOptimization.getTSPSolution();
+                //
+                SAAlgorithm.getTSPSolution(points);
+                //
+                //quasiOptimalAlgorithm.getTSPSolution();
                 //
                 //GrahamAlgorithm.convexHullFinder(points);
 
@@ -45,7 +57,7 @@ public class Main extends JFrame {
                 "y", // Y-Axis Label
                 dataset ,
                 PlotOrientation.VERTICAL ,
-                true , true , false);
+                false , true , false);
 
 
         final XYPlot plot = chart.getXYPlot( );
@@ -78,9 +90,9 @@ public class Main extends JFrame {
         {
             Point2D p = new Point2D.Double(points.get(i).x, points.get(i).y);
 
-            String label = Integer.toString(i) + " " + points.get(i).toString();
+            String label = i + " " + points.get(i).toString();
             XYTextAnnotation annotation = new XYTextAnnotation(label, p.getX(), p.getY());
-            annotation.setFont(new Font("TimesRoman", Font.TRUETYPE_FONT, 14));
+            annotation.setFont(new Font("TimesRoman", Font.PLAIN, 14));
             annotation.setPaint(Color.DARK_GRAY);
             annotation.setTextAnchor(TextAnchor.TOP_CENTER);
             plot.addAnnotation(annotation);

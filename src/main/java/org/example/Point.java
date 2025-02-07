@@ -17,37 +17,42 @@ public class Point extends Point2D.Double {
             if (arrayList.contains(point)) --i;
             else arrayList.add(point);
         }
-        getReadyPoints(arrayList);
         System.out.println(" ");
         return arrayList;
     }
 
-    private static ArrayList<Point> getReadyPoints(ArrayList<Point> arrayList) {
-//        arrayList.add(new Point(75, 43));
-//        arrayList.add(new Point(94, 72));
-//        arrayList.add(new Point(88, 51));
-//        arrayList.add(new Point(59, 20));
-//        arrayList.add(new Point(38, 93));
-//        arrayList.add(new Point(66, 19));
-//        arrayList.add(new Point(10, 50));
-//        arrayList.add(new Point(74, 8));
-//        arrayList.add(new Point(96, 59));
-//        arrayList.add(new Point(63, 60));
-//        arrayList.add(new Point(63, 48));
-//        arrayList.add(new Point(51, 49));
-//        arrayList.add(new Point(96, 33));
-//        arrayList.add(new Point(82, 46));
-//        arrayList.add(new Point(92, 5));
-//        arrayList.add(new Point(63, 20));
-//        arrayList.add(new Point(4, 95));
-//        arrayList.add(new Point(95, 67));
-//        arrayList.add(new Point(71, 45));
-//        arrayList.add(new Point(58, 51));
-//        arrayList.add(new Point(23, 77));
-//        arrayList.add(new Point(96, 7));
-//        arrayList.add(new Point(90, 1));
-//        arrayList.add(new Point(76, 11));
-//        arrayList.add(new Point(75, 20));
+    public static ArrayList<Point> getReadyPoints() {
+        ArrayList<Point> arrayList = new ArrayList<>();
+        arrayList.add(new Point(75, 43));
+        arrayList.add(new Point(94, 72));
+        arrayList.add(new Point(88, 51));
+        arrayList.add(new Point(59, 20));
+        arrayList.add(new Point(38, 93));
+        arrayList.add(new Point(66, 19));
+        arrayList.add(new Point(10, 50));
+        arrayList.add(new Point(74, 8));
+        arrayList.add(new Point(96, 59));
+        arrayList.add(new Point(63, 60));
+        arrayList.add(new Point(63, 48));
+        arrayList.add(new Point(51, 49));
+        arrayList.add(new Point(96, 33));
+        arrayList.add(new Point(82, 46));
+        arrayList.add(new Point(92, 5));
+        arrayList.add(new Point(63, 20));
+        arrayList.add(new Point(4, 95));
+        arrayList.add(new Point(95, 67));
+        arrayList.add(new Point(71, 45));
+        arrayList.add(new Point(58, 51));
+        arrayList.add(new Point(23, 77));
+        arrayList.add(new Point(96, 7));
+        arrayList.add(new Point(90, 1));
+        arrayList.add(new Point(76, 11));
+        arrayList.add(new Point(75, 20));
+        arrayList.add(new Point(13, 22));
+        arrayList.add(new Point(14, 27));
+        arrayList.add(new Point(20, 27));
+        arrayList.add(new Point(20, 14));
+        arrayList.add(new Point(51.57, 47));
 
         return arrayList;
     }

@@ -1,5 +1,5 @@
 import org.example.Point;
-import org.example.QuasiOptimalAlgorithm;
+import org.example.Algorithms.QuasiOptimalAlgorithm.QuasiOptimalAlgorithm;
 import org.junit.Assert;
 import org.junit.Test;
 
