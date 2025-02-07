@@ -3,8 +3,8 @@ package org.example.Algorithms.AntColony;
 public class Ant
 {
     protected int trailSize;
-    protected int trail[];
-    protected boolean visited[];
+    protected int[] trail;
+    protected boolean[] visited;
 
     public Ant(int tourSize) 
     {
@@ -24,7 +24,7 @@ public class Ant
         return visited[i];
     }
 
-    protected double trailLength(double graph[][]) 
+    protected double trailLength(double[][] graph)
     {
         double length = graph[trail[trailSize - 1]][trail[0]];
         for (int i = 0; i < trailSize - 1; i++) 

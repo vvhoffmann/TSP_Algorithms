@@ -16,8 +16,7 @@ public class QuasiOptimalAlgorithm {
         resultPoints.addAll(convexHull);
 
         System.out.println("Graham Scan Convex Hull:");
-        for (int i = 0; i < convexHull.size(); ++i)
-            System.out.print(points.indexOf(convexHull.get(i)) + ":" + convexHull.get(i) + ",  ");
+        for (Point point : convexHull) System.out.print(points.indexOf(point) + ":" + point + ",  ");
         System.out.println();
     }
 

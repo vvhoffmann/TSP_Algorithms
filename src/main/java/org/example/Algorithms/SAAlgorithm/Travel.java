@@ -1,14 +1,11 @@
 package org.example.Algorithms.SAAlgorithm;
 
 import org.example.Point;
-
 import java.util.ArrayList;
-import java.util.Collections;
-
 
 public class Travel {
 
-    private ArrayList<Point> points = new ArrayList<>();
+    private ArrayList<Point> points;
     private ArrayList<Point> previouspoints = new ArrayList<>();
 
     public Travel(ArrayList<Point> points) {

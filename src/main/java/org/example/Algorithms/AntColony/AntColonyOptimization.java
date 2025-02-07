@@ -20,14 +20,13 @@ import java.util.*;
 
 public class AntColonyOptimization 
 {
-    public String s="";
-    private double c = 1.0;
-    private double alpha = 2;
-    private double beta = 6;
-    private double evaporation = 0.5;
-    private double Q = 500;
-    private double antFactor = 0.5;
-    private double randomFactor = 0.01;  //introducing randomness
+    private final double c = 1.0;
+    private final double alpha = 2;
+    private final double beta = 6;
+    private final double evaporation = 0.5;
+    private final double Q = 500;
+    private final double antFactor = 0.5;
+    private final double randomFactor = 0.01;  //introducing randomness
 
     private int maxIterations = 1000;
 
@@ -157,7 +156,7 @@ public class AntColonyOptimization
     private int selectNextCity(Ant ant) 
     {
         int t = random.nextInt(numberOfCities - currentIndex);
-        if (random.nextDouble() < randomFactor) 
+        if (random.nextDouble() < randomFactor)
         {
             int cityIndex=-999;
             for(int i=0;i<numberOfCities;i++)
@@ -214,7 +213,7 @@ public class AntColonyOptimization
     {
         for (int i = 0; i < numberOfCities; i++) 
         {
-            for (int j = 0; j < numberOfCities; j++) 
+            for (int j = 0; j < numberOfCities; j++)
                 trails[i][j] *= evaporation;
         }
         for (Ant a : ants) 

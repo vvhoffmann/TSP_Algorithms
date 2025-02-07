@@ -25,8 +25,8 @@ import java.util.ArrayList;
 public class Main extends JFrame {
     private final XYSeriesCollection dataset = new XYSeriesCollection();
     private final ArrayList<Point> points;
-    private ArrayList<Point> convexHullPoints;
-    private ArrayList<Point> solutionPoints;
+    private final ArrayList<Point> convexHullPoints;
+    private final ArrayList<Point> solutionPoints;
 
     public Main() {
         points = Point.getReadyPoints(); //createRandomPoints(100);
