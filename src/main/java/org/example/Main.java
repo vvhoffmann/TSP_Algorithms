@@ -1,8 +1,13 @@
+
 package org.example;
 
 
 import org.example.Algorithms.AntColony.AntColonyOptimization;
+import org.example.Algorithms.HeldKarpAlgorithm;
+import org.example.Algorithms.NearestNeighbourAlgorithm;
+import org.example.Algorithms.QuasiOptimalAlgorithm.GrahamAlgorithm;
 import org.example.Algorithms.QuasiOptimalAlgorithm.QuasiOptimalAlgorithm;
+import org.example.Algorithms.RepetitiveNearestNeighbourAlgorithm;
 import org.example.Algorithms.SAAlgorithm.SAAlgorithm;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -21,6 +26,8 @@ import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
+import static org.example.Point.createRandomPoints;
+
 
 public class Main extends JFrame {
     private final XYSeriesCollection dataset = new XYSeriesCollection();
@@ -29,65 +36,68 @@ public class Main extends JFrame {
     private final ArrayList<Point> solutionPoints;
 
     public Main() {
-        points = Point.getReadyPoints(); //createRandomPoints(100);
+        points = createRandomPoints(20);//Point.getReadyPoints();
         QuasiOptimalAlgorithm quasiOptimalAlgorithm = new QuasiOptimalAlgorithm(points);
         AntColonyOptimization antColonyOptimization = new AntColonyOptimization(points);
         convexHullPoints = quasiOptimalAlgorithm.getConvexHull();
         solutionPoints =
-                //HeldKarpAlgorithm.getTSPSolution(points);
+                HeldKarpAlgorithm.getTSPSolution(points);
                 //
                 //NearestNeighbourAlgorithm.getTSPSolution(points);
                 //
-                //NearestNeighbourAlgorithm.getTSPSolutionKK(points);
+                //RepetitiveNearestNeighbourAlgorithm.getTSPSolution(points);
                 //
                 //antColonyOptimization.getTSPSolution();
                 //
-                SAAlgorithm.getTSPSolution(points);
+                //SAAlgorithm.getTSPSolution(points);
                 //
                 //quasiOptimalAlgorithm.getTSPSolution();
                 //
                 //GrahamAlgorithm.convexHullFinder(points);
 
-        createPointConnections(solutionPoints,"RESULT");
+        createPointConnections(solutionPoints, "RESULT");
         createPointConnections(convexHullPoints, "CH");
 
         JFreeChart chart = ChartFactory.createXYLineChart(
                 "TSP", // Chart title
                 "x", // X-Axis Label
                 "y", // Y-Axis Label
-                dataset ,
-                PlotOrientation.VERTICAL ,
-                false , true , false);
+                dataset,
+                PlotOrientation.VERTICAL,
+                false, true, false);
 
 
-        final XYPlot plot = chart.getXYPlot( );
+        final XYPlot plot = chart.getXYPlot();
         addAnnotation(plot);
-        ChartPanel chartPanel = new ChartPanel( chart );
-        chartPanel.setPreferredSize( new Dimension( 850 , 850 ) );
-        XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer(true,false );
+        ChartPanel chartPanel = new ChartPanel(chart);
+        chartPanel.setPreferredSize(new Dimension(850, 850));
+        XYLineAndShapeRenderer renderer = getXyLineAndShapeRenderer();
 
-        renderer.setBaseToolTipGenerator(new StandardXYToolTipGenerator());
-        for(int i = 0; i< solutionPoints.size(); ++i) {
-            renderer.setSeriesPaint( i , Color.YELLOW );
-            renderer.setSeriesItemLabelsVisible(i, true);
-            renderer.setSeriesItemLabelFont(i, renderer.getBaseItemLabelFont().deriveFont(14f));
-            renderer.setSeriesVisibleInLegend(i, true);
-        }
-        for(int i = solutionPoints.size(); i< solutionPoints.size()+convexHullPoints.size()-1; ++i) {
-            renderer.setSeriesPaint( i , Color.RED );
-            renderer.setSeriesItemLabelsVisible(i, true);
-            renderer.setSeriesItemLabelFont(i, renderer.getBaseItemLabelFont().deriveFont(14f));
-            renderer.setSeriesVisibleInLegend(i, true);
-        }
-
-        plot.setRenderer( renderer );
-        setContentPane( chartPanel );
+        plot.setRenderer(renderer);
+        setContentPane(chartPanel);
     }
 
-    private void addAnnotation(XYPlot plot)
-    {
-        for(int i=0;i<points.size();++i)
-        {
+    private XYLineAndShapeRenderer getXyLineAndShapeRenderer() {
+        XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer(true, false);
+
+        renderer.setBaseToolTipGenerator(new StandardXYToolTipGenerator());
+        for (int i = 0; i < solutionPoints.size(); ++i) {
+            renderer.setSeriesPaint(i, Color.YELLOW);
+            renderer.setSeriesItemLabelsVisible(i, true);
+            renderer.setSeriesItemLabelFont(i, renderer.getBaseItemLabelFont().deriveFont(14f));
+            renderer.setSeriesVisibleInLegend(i, true);
+        }
+        for (int i = solutionPoints.size(); i < solutionPoints.size() + convexHullPoints.size() - 1; ++i) {
+            renderer.setSeriesPaint(i, Color.RED);
+            renderer.setSeriesItemLabelsVisible(i, true);
+            renderer.setSeriesItemLabelFont(i, renderer.getBaseItemLabelFont().deriveFont(14f));
+            renderer.setSeriesVisibleInLegend(i, true);
+        }
+        return renderer;
+    }
+
+    private void addAnnotation(XYPlot plot) {
+        for (int i = 0; i < points.size(); ++i) {
             Point2D p = new Point2D.Double(points.get(i).x, points.get(i).y);
 
             String label = i + " " + points.get(i).toString();
@@ -99,27 +109,25 @@ public class Main extends JFrame {
         }
     }
 
-    private void createPointConnections(ArrayList<Point> seriesPoints, String name)
-    {
+    private void createPointConnections(ArrayList<Point> seriesPoints, String name) {
         XYSeries segment;
 
-        segment = new XYSeries( name+" SEGMENT 0" );
+        segment = new XYSeries(name + " SEGMENT 0");
         segment.add(seriesPoints.get(0).x, seriesPoints.get(0).y);
-        segment.add(seriesPoints.get(seriesPoints.size()-1).x, seriesPoints.get(seriesPoints.size()-1).y);
+        segment.add(seriesPoints.get(seriesPoints.size() - 1).x, seriesPoints.get(seriesPoints.size() - 1).y);
         dataset.addSeries(segment);
 
-        for(int i = 0; i< seriesPoints.size()-1; ++i)
-        {
-            segment = new XYSeries( name + " SEGMENT"+ (i+1));
+        for (int i = 0; i < seriesPoints.size() - 1; ++i) {
+            segment = new XYSeries(name + " SEGMENT" + (i + 1));
             segment.add(seriesPoints.get(i).x, seriesPoints.get(i).y);
-            segment.add(seriesPoints.get(i+1).x, seriesPoints.get(i+1).y);
+            segment.add(seriesPoints.get(i + 1).x, seriesPoints.get(i + 1).y);
             dataset.addSeries(segment);
         }
     }
 
     public static void main(String[] args) {
         Main chart = new Main();
-        chart.pack( );
-        chart.setVisible( true );
+        chart.pack();
+        chart.setVisible(true);
     }
 }

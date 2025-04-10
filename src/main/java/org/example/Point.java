@@ -10,51 +10,66 @@ public class Point extends Point2D.Double {
     }
 
     public static ArrayList<Point> createRandomPoints(int size) {
-        ArrayList<Point> arrayList = new ArrayList<>(size);
+        ArrayList<Point> points = new ArrayList<>(size);
         Random random = new Random();
         for (int i = 0; i < size; ++i) {
-            Point point = new Point(random.nextInt(100), random.nextInt(100));
-            if (arrayList.contains(point)) --i;
-            else arrayList.add(point);
+            Point point = new Point(random.nextInt(25), random.nextInt(25));
+            if (points.contains(point)) --i;
+            else points.add(point);
         }
         System.out.println(" ");
-        return arrayList;
+        return points;
     }
 
     public static ArrayList<Point> getReadyPoints() {
-        ArrayList<Point> arrayList = new ArrayList<>();
-        arrayList.add(new Point(75, 43));
-        arrayList.add(new Point(94, 72));
-        arrayList.add(new Point(88, 51));
-        arrayList.add(new Point(59, 20));
-        arrayList.add(new Point(38, 93));
-        arrayList.add(new Point(66, 19));
-        arrayList.add(new Point(10, 50));
-        arrayList.add(new Point(74, 8));
-        arrayList.add(new Point(96, 59));
-        arrayList.add(new Point(63, 60));
-        arrayList.add(new Point(63, 48));
-        arrayList.add(new Point(51, 49));
-        arrayList.add(new Point(96, 33));
-        arrayList.add(new Point(82, 46));
-        arrayList.add(new Point(92, 5));
-        arrayList.add(new Point(63, 20));
-        arrayList.add(new Point(4, 95));
-        arrayList.add(new Point(95, 67));
-        arrayList.add(new Point(71, 45));
-        arrayList.add(new Point(58, 51));
-        arrayList.add(new Point(23, 77));
-        arrayList.add(new Point(96, 7));
-        arrayList.add(new Point(90, 1));
-        arrayList.add(new Point(76, 11));
-        arrayList.add(new Point(75, 20));
-        arrayList.add(new Point(13, 22));
-        arrayList.add(new Point(14, 27));
-        arrayList.add(new Point(20, 27));
-        arrayList.add(new Point(20, 14));
-        arrayList.add(new Point(51.57, 47));
+        ArrayList<Point> points = new ArrayList<>();
+        points.add(new Point(75, 43));
+        points.add(new Point(94, 72));
+        points.add(new Point(88, 51));
+        points.add(new Point(59, 20));
+        points.add(new Point(38, 93));
+        points.add(new Point(66, 19));
+        points.add(new Point(10, 50));
+        points.add(new Point(74, 8));
+        points.add(new Point(96, 59));
+        points.add(new Point(63, 60));
+        points.add(new Point(63, 48));
+        points.add(new Point(51, 49));
+        points.add(new Point(96, 33));
+        points.add(new Point(82, 46));
+        points.add(new Point(92, 5));
+        points.add(new Point(63, 20));
+        points.add(new Point(4, 95));
+        points.add(new Point(95, 67));
+        points.add(new Point(71, 45));
+        points.add(new Point(58, 51));
+        points.add(new Point(23, 77));
+        points.add(new Point(96, 7));
+        points.add(new Point(90, 1));
+        points.add(new Point(76, 11));
+        points.add(new Point(75, 20));
+        points.add(new Point(13, 22));
+        points.add(new Point(14, 27));
+        points.add(new Point(20, 27));
+        points.add(new Point(20, 14));
+        points.add(new Point(51.57, 47));
 
-        return arrayList;
+//        points.add(new Point(75,43));
+//        points.add(new Point(94,72));
+//        points.add(new Point(88,51));
+//        points.add(new Point(59,20));
+//        points.add(new Point(38,93));
+//        points.add(new Point(66,19));
+//        points.add(new Point(10,50));
+//        points.add(new Point(74,8));
+//        points.add(new Point(96,59));
+//        points.add(new Point(63,60));
+//        points.add(new Point(63,48));
+//        points.add(new Point(51,49));
+//        points.add(new Point(96,33));
+//        points.add(new Point(82,46));
+//        points.add(new Point(92,5));
+        return points;
     }
 
     public static double calculateShortestWayToPoint(Point a, Point b, Point p) {
@@ -69,6 +84,7 @@ public class Point extends Point2D.Double {
                         (a.x * BAy2 + CAy * BAx * BAy + c.x * BAx2) / BA2,
                         (a.y * BAx2 + CAx * BAy * BAx + c.y * BAy2) / BA2
                 );
+
     }
 
     public static boolean less(Point a, Point b) {
@@ -87,6 +103,16 @@ public class Point extends Point2D.Double {
 
     public double distance(Point b) {
         return Math.hypot(this.x - b.x, this.y - b.y);
+    }
+
+    public static double[][] getDistanceArray(ArrayList<Point> points) {
+        int n = points.size();
+        double[][] dist = new double[n][n]; // Macierz odległości
+        for (int i = 0; i < n; i++)
+            for (int j = 0; j < n; j++)
+                dist[i][j] = Point.distance(points.get(i), points.get(j));
+
+        return dist;
     }
 
     public static long doubleDiv(double a, double b) {

@@ -22,12 +22,12 @@ public class SAAlgorithm {
         Travel currentSolution = travel;
 
         for (int i = 0; i < numberOfIterations; i++) {
-            if (t > 1) {
+            if (t > 0.1) {
                 currentSolution.swapPoints();
                 double currentDistance = currentSolution.getDistance();
                 if (currentDistance < bestDistance) {
                     bestDistance = currentDistance;
-                } else if (Math.exp((bestDistance - currentDistance) / t) < Math.random()*100) {
+                } else if (Math.exp((bestDistance - currentDistance) / t) < Math.random()*0.01) {
                     currentSolution.revertSwap();
                 }
                 t *= coolingRate;

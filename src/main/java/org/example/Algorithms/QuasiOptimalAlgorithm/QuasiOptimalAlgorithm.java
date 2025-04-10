@@ -64,17 +64,17 @@ public class QuasiOptimalAlgorithm {
                         //krótsze ramie może być takie samo dla 2 sąsiednich odcinków, więc należy sprawdzić, który z nich będzie lepszy dla punktu
                         if (AP < BP) { //index od pointA -1
                             tmpIndex = tmpA == 0 ? resultPoints.size() - 1 : tmpA - 1;
-                            if(PPro< Point.distance(pointP, Point.projection( resultPoints.get(tmpIndex),pointA, pointP)))
+                            if (PPro < Point.distance(pointP, Point.projection(resultPoints.get(tmpIndex), pointA, pointP)))
                                 tmpR = tmpIndex;
                         } else { //index od pointB +1
                             tmpIndex = (r == resultPoints.size() - 1) ? 0 : r + 1;
-                            if(PPro< Point.distance(pointP, Point.projection( pointB, resultPoints.get(tmpIndex), pointP)))
+                            if (PPro < Point.distance(pointP, Point.projection(pointB, resultPoints.get(tmpIndex), pointP)))
                                 tmpR = tmpIndex;
                         }
-                        PPro = Math.min(AP, BP);
+                        PPro = Math.min(2*AP, 2*BP);//(AP + BP) / 2;//
                     }
 
-                    if (d_min < 0 || (d_min > PPro )) {
+                    if (d_min < 0 || (d_min > PPro)) {
                         d_min = PPro;
                         indP = p;
                         indB = tmpR;

@@ -3,66 +3,79 @@ package org.example.Algorithms;
 import org.example.Point;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 public class HeldKarpAlgorithm {
-    static final int INF = 999999;
+
+    private static final double INF = Integer.MAX_VALUE;
 
     public static ArrayList<Point> getTSPSolution(ArrayList<Point> points) {
         int n = points.size();
-        double[][] dist = getDistanceMatrix(points);
+        int N = 1 << n; // 2^n
+        double[][] dp = new double[N][n];
+        int[][] parent = new int[N][n]; // Do rekonstrukcji ścieżki
 
-        // Liczba podzbiorów (2^n)
-        int totalSubsets = 1 << n;
+        for (double[] row : dp) Arrays.fill(row, INF);
+        dp[1][0] = 0; // Start w punkcie 0
 
-        // minDist table to store the minimum cost of visiting a subset of cities and ending at a specific city
-        double[][] minDist = new double[totalSubsets][n];
+        double[][] dist = Point.getDistanceArray(points);
 
-// Initialize the DP table with infinity
-        for (int i = 0; i < totalSubsets; i++) {
-            for (int j = 0; j < n; j++) {
-                minDist[i][j] = INF;
-            }
-        }
+        // Wypełnianie tablicy DP
+        for (int subset = 1; subset < N; subset++) {
+            if ((subset & 1) == 0) continue; // Musi zawierać punkt startowy
 
-// Starting point, cost is 0 to start from the first city
-        minDist[1][0] = 0;
+            for (int j = 1; j < n; j++) { // Ostatnie miasto
+                if ((subset & (1 << j)) == 0) continue; // j nie w zbiorze
 
-// Iterate over all subsets of cities
-        for (int mask = 1; mask < totalSubsets; mask++) {
-            for (int u = 0; u < n; u++) {
-                if ((mask & (1 << u)) != 0) {
-                    for (int v = 0; v < n; v++) {
-                        if ((mask & (1 << v)) == 0) {
-                            int newMask = mask | (1 << v);
-                            minDist[newMask][v] = Math.min(minDist[newMask][v], minDist[mask][u] + dist[u][v]);
+                int prevSubset = subset ^ (1 << j); // Usunięcie j z podzbioru
+                double minCost = INF;
+                int bestK = -1;
+
+                for (int k = 0; k < n; k++) {
+                    if ((prevSubset & (1 << k)) != 0) { // k jest w zbiorze
+                        double newCost = dp[prevSubset][k] + dist[k][j];
+                        if (newCost < minCost) {
+                            minCost = newCost;
+                            bestK = k;
                         }
                     }
                 }
+                dp[subset][j] = minCost;
+                parent[subset][j] = bestK; // Zapamiętujemy ścieżkę
             }
         }
 
+        // Odczytanie minimalnej wartości
+        int fullSet = N - 1;
+        double minTourCost = INF;
+        int lastCity = -1;
 
-
-// Find the minimum cost to complete the tour
-        double minCost = INF;
-        for (int i = 1; i < n; i++) {
-            minCost = Math.min(minCost, minDist[totalSubsets - 1][i] + dist[i][0]);
+        for (int j = 1; j < n; j++) {
+            double cost = dp[fullSet][j] + dist[j][0];
+            if (cost < minTourCost) {
+                minTourCost = cost;
+                lastCity = j;
+            }
         }
 
-        //System.out.println("Minimum cost: " + minCost);
-        //return minCost;
-
-        return points;
-
+        // Rekonstrukcja ścieżki
+        ArrayList<Point> path = reconstructPath(parent, fullSet, lastCity, points);
+        path.add(points.get(0)); // Powrót do startu
+        return path;
     }
 
-    private static double[][] getDistanceMatrix(ArrayList<Point> points) {
-        double[][] dist = new double[points.size()][points.size()];
-        for (int i = 0; i < points.size(); i++)
-            for (int j = 0; j < points.size(); j++)
-                dist[i][j] = Point.distance(points.get(i), points.get(j));
-
-        return dist;
+    private static ArrayList<Point> reconstructPath(int[][] parent, int subset, int last, ArrayList<Point> points) {
+        ArrayList<Point> path = new ArrayList<>();
+        while (last != 0) {
+            path.add(points.get(last));
+            int prevSubset = subset ^ (1 << last);
+            last = parent[subset][last];
+            subset = prevSubset;
+        }
+        path.add(points.get(0)); // Dodaj punkt startowy
+        Collections.reverse(path);
+        return path;
     }
 }
 
