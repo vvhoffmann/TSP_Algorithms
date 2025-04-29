@@ -31,7 +31,7 @@ public class GrahamAlgorithm {
                     return b.y < c.y ? -1 : 1; //bliższy punkt najpierw
                 else
                     return b.x < c.x ? -1 : 1;
-            }else
+            } else
                 return newPointDirection * -1;
         });
     }
