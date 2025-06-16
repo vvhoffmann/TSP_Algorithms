@@ -1,29 +1,28 @@
 package org.example.Algorithms;
 
-import org.example.Point;
+import org.example.TSPSolution;
+import org.example.pointUtils.Point;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import static org.example.Algorithms.QuasiOptimalAlgorithm.GrahamAlgorithm.getMinY;
+public class NearestNeighbourAlgorithm extends TSPSolution {
 
-public class NearestNeighbourAlgorithm {
-
-    public static ArrayList<Point> getTSPSolution(ArrayList<Point> points, Point startPoint) {
+    protected static ArrayList<Point> getTSPSolutionBasedOnStartingPoint(ArrayList<Point> points, Point startPoint) {
         if (points == null || points.isEmpty())
             return new ArrayList<>(); // Zwróć pustą listę, jeśli punkty nie zostały zainicjalizowane.
 
-        return getSolutionPoints(points, startPoint);
+        return getSolution(points, startPoint);
     }
 
-    public static ArrayList<Point> getTSPSolution(ArrayList<Point> points) {
+    protected ArrayList<Point> getTSPSolution(ArrayList<Point> points) {
         if (points == null || points.isEmpty())
             return new ArrayList<>(); // Zwróć pustą listę, jeśli punkty nie zostały zainicjalizowane.
 
-        return getSolutionPoints(points, points.get(0));
+        return getSolution(points, points.get(0));
     }
 
-    private static ArrayList<Point> getSolutionPoints(ArrayList<Point> points, Point current) {
+    private static ArrayList<Point> getSolution(ArrayList<Point> points, Point current) {
         ArrayList<Point> solution = new ArrayList<>();
         HashSet<Point> visited = new HashSet<>();
         solution.add(current);

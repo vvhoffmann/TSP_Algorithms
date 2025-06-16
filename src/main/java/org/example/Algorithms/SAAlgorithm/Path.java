@@ -1,14 +1,16 @@
 package org.example.Algorithms.SAAlgorithm;
 
-import org.example.Point;
+import org.example.pointUtils.Point;
+import org.example.pointUtils.PointUtils;
+
 import java.util.ArrayList;
 
-public class Travel {
+public class Path {
 
     private ArrayList<Point> points;
     private ArrayList<Point> previouspoints = new ArrayList<>();
 
-    public Travel(ArrayList<Point> points) {
+    public Path(ArrayList<Point> points) {
         this.points = points;
     }
 
@@ -44,7 +46,7 @@ public class Travel {
             } else {
                 destination = getPoint(0);
             }
-            distance += Point.distance(starting,destination);
+            distance += PointUtils.distance(starting,destination);
         }
         return distance;
     }

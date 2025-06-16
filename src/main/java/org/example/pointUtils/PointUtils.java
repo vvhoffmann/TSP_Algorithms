@@ -1,12 +1,29 @@
-package org.example;
+package org.example.pointUtils;
 
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Point extends Point2D.Double {
-    public Point(double x, double y) {
-        super(x, y);
+public class PointUtils {
+    public static double[][] getDistanceArray(ArrayList<Point> points) {
+        int n = points.size();
+        double[][] dist = new double[n][n]; // Macierz odległości
+        for (int i = 0; i < n; i++)
+            for (int j = 0; j < n; j++)
+                dist[i][j] = distance(points.get(i), points.get(j));
+
+        return dist;
+    }
+
+    public static long doubleDiv(double a, double b) {
+        return (long) (a / b);
+    }
+
+    public static double doubleMod(double a, double b) {
+        return a - doubleDiv(a, b) * b;
+    }
+
+    public static double angle(Point a, Point b) {
+        return doubleMod(Math.atan2(b.y - a.y, b.x - a.x) + Math.PI, Math.PI);
     }
 
     public static ArrayList<Point> createRandomPoints(int size) {
@@ -99,36 +116,5 @@ public class Point extends Point2D.Double {
 
     public static double distance(Point a, Point b) {
         return Math.hypot(a.x - b.x, a.y - b.y);
-    }
-
-    public double distance(Point b) {
-        return Math.hypot(this.x - b.x, this.y - b.y);
-    }
-
-    public static double[][] getDistanceArray(ArrayList<Point> points) {
-        int n = points.size();
-        double[][] dist = new double[n][n]; // Macierz odległości
-        for (int i = 0; i < n; i++)
-            for (int j = 0; j < n; j++)
-                dist[i][j] = Point.distance(points.get(i), points.get(j));
-
-        return dist;
-    }
-
-    public static long doubleDiv(double a, double b) {
-        return (long) (a / b);
-    }
-
-    public static double doubleMod(double a, double b) {
-        return a - doubleDiv(a, b) * b;
-    }
-
-    public static double angle(Point a, Point b) {
-        return doubleMod(Math.atan2(b.y - a.y, b.x - a.x) + Math.PI, Math.PI);
-    }
-
-    @Override
-    public String toString() {
-        return " [" + x + ", " + y + ']';
     }
 }

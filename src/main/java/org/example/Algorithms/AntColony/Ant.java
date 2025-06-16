@@ -1,5 +1,7 @@
 package org.example.Algorithms.AntColony;
 
+import java.util.stream.Stream;
+
 public class Ant
 {
     protected int trailSize;
@@ -27,14 +29,16 @@ public class Ant
     protected double trailLength(double[][] graph)
     {
         double length = graph[trail[trailSize - 1]][trail[0]];
-        for (int i = 0; i < trailSize - 1; i++) 
-            length += graph[trail[i]][trail[i + 1]];
+
+        for(int i= 1; i < trailSize; i++)
+            length += graph[trail[i-1]][trail[i]];
+
         return length;
     }
 
     protected void clear() 
     {
-        for (int i = 0; i < trailSize; i++)
+        for (int i = 0 ; i < trailSize ; i++)
             visited[i] = false;
     }
 }

@@ -1,62 +1,54 @@
 package org.example;
 
-import org.example.Algorithms.AntColony.AntColonyOptimization;
+import org.example.Algorithms.AntColony.AntColonyQuasiOptimizationAlgorithm;
+import org.example.Algorithms.AntColony.AntsParameters;
 import org.example.Algorithms.HeldKarpAlgorithm;
 import org.example.Algorithms.NearestNeighbourAlgorithm;
-import org.example.Algorithms.QuasiOptimalAlgorithm.GrahamAlgorithm;
-import org.example.Algorithms.QuasiOptimalAlgorithm.QuasiOptimalAlgorithm;
+import org.example.Algorithms.QuasiOptimizationAlgorithm.QuasiOptimizationAlgorithm;
 import org.example.Algorithms.RepetitiveNearestNeighbourAlgorithm;
 import org.example.Algorithms.SAAlgorithm.SAAlgorithm;
+import org.example.pointUtils.Point;
+import org.example.pointUtils.PointUtils;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.annotations.XYTextAnnotation;
 import org.jfree.chart.labels.StandardXYToolTipGenerator;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
-import org.jfree.ui.TextAnchor;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
-
-import static org.example.Point.createRandomPoints;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainAllAlgorithms extends JFrame {
+
     private final ArrayList<Point> points;
-    private final ArrayList<ArrayList<Point>> solutions = new ArrayList<>();
-    private final String[] algorithmNames = {"Held-Karp", "Nearest Neighbour", "Repetitive Nearest Neighbour", "Ant Colony", "Simulated Annealing", "Quasi Optimal"};
+    private Map<SolutionType, ArrayList<Point>> solutions = new HashMap<>();
 
     public MainAllAlgorithms() {
-        points = createRandomPoints(20);
-
-        // Oblicz rozwiązania dla każdego algorytmu
-        solutions.add(HeldKarpAlgorithm.getTSPSolution(points));
-        solutions.add(NearestNeighbourAlgorithm.getTSPSolution(points));
-        solutions.add(RepetitiveNearestNeighbourAlgorithm.getTSPSolution(points));
-        solutions.add(new AntColonyOptimization(points).getTSPSolution());
-        solutions.add(SAAlgorithm.getTSPSolution(points));
-        solutions.add(new QuasiOptimalAlgorithm(points).getTSPSolution());
-
+        points = PointUtils.createRandomPoints(20);
+        solutions = TSPSolutionFactory.getAllSolutions(points);
         setLayout(new GridLayout(2, 3)); // Układ siatki 2x3
         setSize(1300, 900);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        for (int i = 0; i < solutions.size(); i++) {
+        for (SolutionType type : SolutionType.values()) {
             XYSeriesCollection dataset = new XYSeriesCollection();
-            createPointConnections(solutions.get(i), dataset);
-            JFreeChart chart = createChart(dataset, algorithmNames[i], i);
+            createPointConnections(solutions.get(type), dataset);
+            JFreeChart chart = createChart(dataset, type);
             add(new ChartPanel(chart));
         }
     }
 
-    private JFreeChart createChart(XYSeriesCollection dataset, String title, int order) {
+    private JFreeChart createChart(XYSeriesCollection dataset, SolutionType solutionType) {
         JFreeChart chart = ChartFactory.createXYLineChart(
-                title, "x", "y", dataset,
+                solutionType.name(), "x", "y", dataset,
                 PlotOrientation.VERTICAL, false, true, false);
 
         XYPlot plot = chart.getXYPlot();
@@ -64,7 +56,7 @@ public class MainAllAlgorithms extends JFrame {
 
         renderer.setBaseToolTipGenerator(new StandardXYToolTipGenerator());
 
-        for(int i = 0; i< solutions.get(order).size(); ++i) {
+        for(int i = 0; i< solutions.get(solutionType).size(); ++i) {
             renderer.setSeriesPaint( i , Color.RED );
             renderer.setSeriesItemLabelsVisible(i, true);
             renderer.setSeriesItemLabelFont(i, renderer.getBaseItemLabelFont().deriveFont(14f));

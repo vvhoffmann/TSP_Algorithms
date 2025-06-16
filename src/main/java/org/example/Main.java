@@ -1,14 +1,9 @@
-
 package org.example;
 
 
-import org.example.Algorithms.AntColony.AntColonyOptimization;
-import org.example.Algorithms.HeldKarpAlgorithm;
-import org.example.Algorithms.NearestNeighbourAlgorithm;
-import org.example.Algorithms.QuasiOptimalAlgorithm.GrahamAlgorithm;
-import org.example.Algorithms.QuasiOptimalAlgorithm.QuasiOptimalAlgorithm;
-import org.example.Algorithms.RepetitiveNearestNeighbourAlgorithm;
-import org.example.Algorithms.SAAlgorithm.SAAlgorithm;
+import org.example.Algorithms.QuasiOptimizationAlgorithm.GrahamAlgorithm;
+import org.example.pointUtils.Point;
+import org.example.pointUtils.PointUtils;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -26,87 +21,32 @@ import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
-import static org.example.Point.createRandomPoints;
-
-
 public class Main extends JFrame {
+    private static final int POINT_COUNT = 25;
+    private static final int WINDOW_SIZE = 850;
+    private static final int FONT_SIZE = 14;
+
     private final XYSeriesCollection dataset = new XYSeriesCollection();
-    private final ArrayList<Point> points;
+    private final ArrayList<Point> allPoints;
     private final ArrayList<Point> convexHullPoints;
     private final ArrayList<Point> solutionPoints;
 
     public Main() {
-        points = createRandomPoints(20);//Point.getReadyPoints();
-        QuasiOptimalAlgorithm quasiOptimalAlgorithm = new QuasiOptimalAlgorithm(points);
-        AntColonyOptimization antColonyOptimization = new AntColonyOptimization(points);
-        convexHullPoints = quasiOptimalAlgorithm.getConvexHull();
-        solutionPoints =
-                HeldKarpAlgorithm.getTSPSolution(points);
-                //
-                //NearestNeighbourAlgorithm.getTSPSolution(points);
-                //
-                //RepetitiveNearestNeighbourAlgorithm.getTSPSolution(points);
-                //
-                //antColonyOptimization.getTSPSolution();
-                //
-                //SAAlgorithm.getTSPSolution(points);
-                //
-                //quasiOptimalAlgorithm.getTSPSolution();
-                //
-                //GrahamAlgorithm.convexHullFinder(points);
+        this.allPoints = PointUtils.createRandomPoints(POINT_COUNT);//Point.getReadyPoints();
+        this.convexHullPoints = GrahamAlgorithm.getConvexHull(allPoints);
+        this.solutionPoints = TSPSolutionFactory.createSolution(SolutionType.QUASI_OPTIMIZATION_ALGORITHM, allPoints);
 
-        createPointConnections(solutionPoints, "RESULT");
-        createPointConnections(convexHullPoints, "CH");
+        addSeriesToDataset();
+        JFreeChart chart = createChart();
+        ChartPanel chartPanel = createChartPanel(chart);
+        configurePlot(chart);
 
-        JFreeChart chart = ChartFactory.createXYLineChart(
-                "TSP", // Chart title
-                "x", // X-Axis Label
-                "y", // Y-Axis Label
-                dataset,
-                PlotOrientation.VERTICAL,
-                false, true, false);
-
-
-        final XYPlot plot = chart.getXYPlot();
-        addAnnotation(plot);
-        ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(new Dimension(850, 850));
-        XYLineAndShapeRenderer renderer = getXyLineAndShapeRenderer();
-
-        plot.setRenderer(renderer);
         setContentPane(chartPanel);
     }
 
-    private XYLineAndShapeRenderer getXyLineAndShapeRenderer() {
-        XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer(true, false);
-
-        renderer.setBaseToolTipGenerator(new StandardXYToolTipGenerator());
-        for (int i = 0; i < solutionPoints.size(); ++i) {
-            renderer.setSeriesPaint(i, Color.YELLOW);
-            renderer.setSeriesItemLabelsVisible(i, true);
-            renderer.setSeriesItemLabelFont(i, renderer.getBaseItemLabelFont().deriveFont(14f));
-            renderer.setSeriesVisibleInLegend(i, true);
-        }
-        for (int i = solutionPoints.size(); i < solutionPoints.size() + convexHullPoints.size() - 1; ++i) {
-            renderer.setSeriesPaint(i, Color.RED);
-            renderer.setSeriesItemLabelsVisible(i, true);
-            renderer.setSeriesItemLabelFont(i, renderer.getBaseItemLabelFont().deriveFont(14f));
-            renderer.setSeriesVisibleInLegend(i, true);
-        }
-        return renderer;
-    }
-
-    private void addAnnotation(XYPlot plot) {
-        for (int i = 0; i < points.size(); ++i) {
-            Point2D p = new Point2D.Double(points.get(i).x, points.get(i).y);
-
-            String label = i + " " + points.get(i).toString();
-            XYTextAnnotation annotation = new XYTextAnnotation(label, p.getX(), p.getY());
-            annotation.setFont(new Font("TimesRoman", Font.PLAIN, 14));
-            annotation.setPaint(Color.DARK_GRAY);
-            annotation.setTextAnchor(TextAnchor.TOP_CENTER);
-            plot.addAnnotation(annotation);
-        }
+    private void addSeriesToDataset() {
+        createPointConnections(solutionPoints, "TSPSolution");
+        createPointConnections(convexHullPoints, "ConvexHull");
     }
 
     private void createPointConnections(ArrayList<Point> seriesPoints, String name) {
@@ -125,9 +65,74 @@ public class Main extends JFrame {
         }
     }
 
+    private JFreeChart createChart() {
+        return ChartFactory.createXYLineChart(
+                "TSP Solver", // Chart title
+                "x",
+                "y",
+                dataset,
+                PlotOrientation.VERTICAL,
+                false, true, false);
+    }
+
+    private static ChartPanel createChartPanel(JFreeChart chart) {
+        ChartPanel chartPanel = new ChartPanel(chart);
+        chartPanel.setPreferredSize(new Dimension(WINDOW_SIZE, WINDOW_SIZE));
+        return chartPanel;
+    }
+
+    private void configurePlot(JFreeChart chart) {
+        XYLineAndShapeRenderer renderer = getXyLineAndShapeRenderer();
+
+        final XYPlot plot = chart.getXYPlot();
+        addAnnotation(plot);
+        plot.setRenderer(renderer);
+    }
+
+    private XYLineAndShapeRenderer getXyLineAndShapeRenderer() {
+        XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer(true, false);
+        renderer.setBaseToolTipGenerator(new StandardXYToolTipGenerator());
+        configureRerenderForSolutionPoints(renderer);
+        configureRerenderForConvexHullPoints(renderer);
+        return renderer;
+    }
+
+    private void configureRerenderForConvexHullPoints(XYLineAndShapeRenderer renderer) {
+        for (int i = solutionPoints.size(); i < solutionPoints.size() + convexHullPoints.size() - 1; ++i) {
+            renderer.setSeriesPaint(i, Color.RED);
+            renderer.setSeriesItemLabelsVisible(i, true);
+            renderer.setSeriesItemLabelFont(i, renderer.getBaseItemLabelFont().deriveFont(14f));
+            renderer.setSeriesVisibleInLegend(i, true);
+        }
+    }
+
+    private void configureRerenderForSolutionPoints(XYLineAndShapeRenderer renderer) {
+        for (int i = 0; i < solutionPoints.size(); ++i) {
+            renderer.setSeriesPaint(i, Color.YELLOW);
+            renderer.setSeriesItemLabelsVisible(i, true);
+            renderer.setSeriesItemLabelFont(i, renderer.getBaseItemLabelFont().deriveFont(14f));
+            renderer.setSeriesVisibleInLegend(i, true);
+        }
+    }
+
+    private void addAnnotation(XYPlot plot) {
+        for (int i = 0; i < allPoints.size(); ++i) {
+            Point2D p = new Point2D.Double(allPoints.get(i).x, allPoints.get(i).y);
+            String label = i + " " + allPoints.get(i).toString();
+
+            XYTextAnnotation annotation = new XYTextAnnotation(label, p.getX(), p.getY());
+            annotation.setFont(new Font("TimesRoman", Font.PLAIN, 14));
+            annotation.setPaint(Color.DARK_GRAY);
+            annotation.setTextAnchor(TextAnchor.TOP_CENTER);
+            plot.addAnnotation(annotation);
+        }
+    }
+
     public static void main(String[] args) {
-        Main chart = new Main();
-        chart.pack();
-        chart.setVisible(true);
+        SwingUtilities.invokeLater(() -> {
+            Main chartWindow = new Main();
+            chartWindow.pack();
+            chartWindow.setVisible(true);
+        });
     }
 }

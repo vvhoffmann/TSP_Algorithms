@@ -1,5 +1,6 @@
-import org.example.Point;
-import org.example.Algorithms.QuasiOptimalAlgorithm.QuasiOptimalAlgorithm;
+import org.example.pointUtils.Point;
+import org.example.Algorithms.QuasiOptimizationAlgorithm.QuasiOptimizationAlgorithm;
+import org.example.pointUtils.PointUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -10,15 +11,16 @@ public class TestQuasiOptimalAlgorithm {
 
     @Test
     public void solutionFromRandomPointsTest() {
-        ArrayList<Point> points = Point.createRandomPoints(100);
-        QuasiOptimalAlgorithm quasiOptimalAlgorithm = new QuasiOptimalAlgorithm(points);
-        ArrayList<Point> solution1 = quasiOptimalAlgorithm.getTSPSolution();
+        ArrayList<Point> points = PointUtils.createRandomPoints(100);
+        QuasiOptimizationAlgorithm quasiOptimalAlgorithm = new QuasiOptimizationAlgorithm();
+
+        ArrayList<Point> solution1 = quasiOptimalAlgorithm.getTSPSolution(points);
 
         Collections.shuffle(points);
-        ArrayList<Point> solution2 = quasiOptimalAlgorithm.getTSPSolution();
+        ArrayList<Point> solution2 = quasiOptimalAlgorithm.getTSPSolution(points);
 
         Collections.shuffle(points);
-        ArrayList<Point> solution3 = quasiOptimalAlgorithm.getTSPSolution();
+        ArrayList<Point> solution3 = quasiOptimalAlgorithm.getTSPSolution(points);
 
         for(int i=0 ; i<solution1.size() ; ++i){
             Assert.assertEquals(solution1.get(i), solution2.get(i));
@@ -43,8 +45,8 @@ public class TestQuasiOptimalAlgorithm {
 
         Assert.assertEquals(points.size(), 10);
 
-        QuasiOptimalAlgorithm quasiOptimalAlgorithm = new QuasiOptimalAlgorithm(points);
-        ArrayList<Point> result = quasiOptimalAlgorithm.getTSPSolution();
+        QuasiOptimizationAlgorithm quasiOptimalAlgorithm = new QuasiOptimizationAlgorithm();
+        ArrayList<Point> result = quasiOptimalAlgorithm.getTSPSolution(points);
 
         ArrayList<Point> tspSolution = new ArrayList<>();
 
@@ -89,8 +91,8 @@ public class TestQuasiOptimalAlgorithm {
 
         Assert.assertEquals(points.size(), 15);
 
-        QuasiOptimalAlgorithm quasiOptimalAlgorithm = new QuasiOptimalAlgorithm(points);
-        ArrayList<Point> result = quasiOptimalAlgorithm.getTSPSolution();
+        QuasiOptimizationAlgorithm quasiOptimalAlgorithm = new QuasiOptimizationAlgorithm();
+        ArrayList<Point> result = quasiOptimalAlgorithm.getTSPSolution(points);
 
         ArrayList<Point> tspSolution = new ArrayList<>();
 

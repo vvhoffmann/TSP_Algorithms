@@ -1,5 +1,6 @@
-import org.example.Algorithms.QuasiOptimalAlgorithm.GrahamAlgorithm;
-import org.example.Point;
+import org.example.Algorithms.QuasiOptimizationAlgorithm.GrahamAlgorithm;
+import org.example.pointUtils.Point;
+import org.example.pointUtils.PointUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -20,7 +21,7 @@ public class TestGrahamAlgorithm {
 
     @Test
     public void convexHullFromRandomPointsTest() {
-        ArrayList<Point> points = Point.createRandomPoints(100);
+        ArrayList<Point> points = PointUtils.createRandomPoints(100);
         ArrayList<Point> convexHull = GrahamAlgorithm.convexHullFinder(points);
 
         for(int i=0 ; i<convexHull.size() ; ++i){
@@ -87,14 +88,14 @@ public class TestGrahamAlgorithm {
     @Test
     public void timeMeasure()
     {
-        ArrayList<Point> points = Point.createRandomPoints(100);
+        ArrayList<Point> points = PointUtils.createRandomPoints(100);
 
         long millisActualTime = System.currentTimeMillis(); // początkowy czas w milisekundach.
         ArrayList<Point> convexHull = GrahamAlgorithm.convexHullFinder(points);
         long executionTime = System.currentTimeMillis() - millisActualTime; // czas wykonania programu w milisekundach.
         System.out.println("Czas wykonania dla 100 punktów: "+executionTime+" ms");
 
-        points = Point.createRandomPoints(500);
+        points = PointUtils.createRandomPoints(500);
 
         millisActualTime = System.currentTimeMillis(); // początkowy czas w milisekundach.
         convexHull = GrahamAlgorithm.convexHullFinder(points);

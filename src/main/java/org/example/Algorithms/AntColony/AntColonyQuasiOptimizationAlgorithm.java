@@ -1,10 +1,10 @@
 package org.example.Algorithms.AntColony;
 
-
-import org.example.Point;
+import org.example.TSPSolution;
+import org.example.pointUtils.Point;
+import org.example.pointUtils.PointUtils;
 
 import java.util.*;
-
 
 /*
  * source: https://github.com/RonitRay/Ant-Colony-Optimization/blob/master/src/AntColonyOptimization.java
@@ -21,43 +21,51 @@ import java.util.*;
  * private int maxIterations = 1000;
  */
 
-public class AntColonyOptimization 
-{
-    private final double c = 1.0;
-    private final double alpha = 2;
-    private final double beta = 6;
-    private final double evaporation = 0.5;
-    private final double Q = 500;
-    private final double antFactor = 0.5;
-    private final double randomFactor = 0.01;  //introducing randomness
-
-    private final int maxIterations = 1000;
-
+public class AntColonyQuasiOptimizationAlgorithm extends TSPSolution {
     private ArrayList<Point> points;
-
-    private final int numberOfPoints;
-    private final int numberOfAnts;
-    private final double[][] graph;
-    private final double[][] trails;
+    private final AntsParameters params;
+    private int numberOfPoints;
+    private int numberOfAnts;
+    private double[][] graph;
+    private double[][] trails;
     private List<Ant> ants = new ArrayList<>();
     private final Random random = new Random();
-    private final double[] probabilities;
+    private double[] probabilities;
 
     private int currentIndex;
 
     private int[] bestTourOrder;
     private double bestTourLength;
 
-    public AntColonyOptimization(ArrayList<Point> points)
+    public AntColonyQuasiOptimizationAlgorithm(AntsParameters params)
     {
+        this.params = params;
+    }
+
+    /**
+     * Perform ant optimization
+     */
+    @Override
+    public ArrayList<Point> getTSPSolution(ArrayList<Point> points)
+    {
+        initializeInitialValues(points);
+        int[] result = null;
+        for(int i=1;i<=5;i++)
+            result = solve();
+
+        return makeSolutionList(result);
+    }
+
+    private void initializeInitialValues(ArrayList<Point> points) {
         this.points = points;
-        graph = generateMatrix(points);
         numberOfPoints = points.size();
-        numberOfAnts = (int) (numberOfPoints * antFactor);
+
+        graph = generateMatrix(points);
+        numberOfAnts = (int) (numberOfPoints * params.antFactor());
 
         trails = new double[numberOfPoints][numberOfPoints];
         probabilities = new double[numberOfPoints];
-        
+
         for(int i=0;i<numberOfAnts;i++)
             ants.add(new Ant(numberOfPoints));
     }
@@ -70,32 +78,14 @@ public class AntColonyOptimization
         int n= points.size();
         double[][] matrix = new double[n][n];
         
-        for(int i=0;i<n;i++)
-        {
-            for(int j=0;j<n;j++)
-            {
-                if(i==j)
-                    matrix[i][j]=0;
-                else
-                    matrix[i][j]=Point.distance(points.get(i),points.get(j));
-            }
-        }
+        for(int i=0 ; i<n ; i++)
+            for(int j=0 ; j<n ; j++)
+                matrix[i][j] = i==j ? 0 : PointUtils.distance(points.get(i),points.get(j));
 
         return matrix;
     }
 
-    /**
-     * Perform ant optimization
-     */
-    public ArrayList<Point> getTSPSolution()
-    {
-        int[] result = null;
-        for(int i=1;i<=5;i++)
-        {
-            result = solve();
-        }
-        return makeSolutionList(result);
-    }
+
 
     private ArrayList<Point> makeSolutionList(int[] result) {
         ArrayList<Point> solution = new ArrayList<>();
@@ -112,7 +102,7 @@ public class AntColonyOptimization
     {
         setupAnts();
         clearTrails();
-        for(int i=0;i<maxIterations;i++)
+        for(int i=0;i<params.maxIterations();i++)
         {
             moveAnts();
             updateTrails();
@@ -127,9 +117,9 @@ public class AntColonyOptimization
      */
     private void setupAnts() 
     {
-        for(int i=0;i<numberOfAnts;i++)
+        for(int i=0 ; i<numberOfAnts ; ++i)
         {
-            for(Ant ant:ants)
+            for(Ant ant : ants)
             {
                 ant.clear();
                 ant.visitCity(-1, random.nextInt(numberOfPoints));
@@ -159,9 +149,9 @@ public class AntColonyOptimization
     private int selectNextCity(Ant ant) 
     {
         int t = random.nextInt(numberOfPoints - currentIndex);
-        if (random.nextDouble() < randomFactor)
+        if (random.nextDouble() < params.randomFactor())
         {
-            int cityIndex=-999;
+            int cityIndex=Integer.MIN_VALUE;
             for(int i=0;i<numberOfPoints;i++)
             {
                 if(i==t && !ant.visited(i))
@@ -170,7 +160,7 @@ public class AntColonyOptimization
                     break;
                 }
             }
-            if(cityIndex!=-999)
+            if(cityIndex!=Integer.MIN_VALUE)
                 return cityIndex;
         }
         calculateProbabilities(ant);
@@ -195,7 +185,7 @@ public class AntColonyOptimization
         for (int l = 0; l < numberOfPoints; l++) 
         {
             if (!ant.visited(l)) 
-                pheromone += Math.pow(trails[i][l], alpha) * Math.pow(1.0 / graph[i][l], beta);
+                pheromone += Math.pow(trails[i][l], params.alpha()) * Math.pow(1.0 / graph[i][l], params.beta());
         }
         for (int j = 0; j < numberOfPoints; j++) 
         {
@@ -203,7 +193,7 @@ public class AntColonyOptimization
                 probabilities[j] = 0.0;
             else 
             {
-                double numerator = Math.pow(trails[i][j], alpha) * Math.pow(1.0 / graph[i][j], beta);
+                double numerator = Math.pow(trails[i][j], params.alpha()) * Math.pow(1.0 / graph[i][j], params.beta());
                 probabilities[j] = numerator / pheromone;
             }
         }
@@ -217,11 +207,11 @@ public class AntColonyOptimization
         for (int i = 0; i < numberOfPoints; i++) 
         {
             for (int j = 0; j < numberOfPoints; j++)
-                trails[i][j] *= evaporation;
+                trails[i][j] *= params.evaporation();
         }
         for (Ant a : ants) 
         {
-            double contribution = Q / a.trailLength(graph);
+            double contribution = params.Q() / a.trailLength(graph);
             for (int i = 0; i < numberOfPoints - 1; i++)
                 trails[a.trail[i]][a.trail[i + 1]] += contribution;
             trails[a.trail[numberOfPoints - 1]][a.trail[0]] += contribution;
@@ -257,7 +247,7 @@ public class AntColonyOptimization
         for(int i=0;i<numberOfPoints;i++)
         {
             for(int j=0;j<numberOfPoints;j++)
-                trails[i][j]=c;
+                trails[i][j]=params.c();
         }
     }
 }

@@ -1,6 +1,8 @@
 package org.example.Algorithms;
 
-import org.example.Point;
+import org.example.TSPSolution;
+import org.example.pointUtils.Point;
+import org.example.pointUtils.PointUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,12 +11,12 @@ import java.util.Collections;
 //source:
 //https://compgeek.co.in/held-karp-algorithm-for-tsp/
 
-public class HeldKarpAlgorithm {
+public class HeldKarpAlgorithm extends TSPSolution {
 
     private static final double INF = Integer.MAX_VALUE;
 
-    public static ArrayList<Point> getTSPSolution(ArrayList<Point> points) {
-        int n = points.size();
+    public ArrayList<Point> getTSPSolution(ArrayList<Point> entryPointList) {
+        int n = entryPointList.size();
         int N = 1 << n; // 2^n
         double[][] dp = new double[N][n];
         int[][] parent = new int[N][n]; // Do rekonstrukcji ścieżki
@@ -22,7 +24,7 @@ public class HeldKarpAlgorithm {
         for (double[] row : dp) Arrays.fill(row, INF);
         dp[1][0] = 0; // Start w punkcie 0
 
-        double[][] dist = Point.getDistanceArray(points);
+        double[][] dist = PointUtils.getDistanceArray(entryPointList);
 
         // Wypełnianie tablicy DP
         for (int subset = 1; subset < N; subset++) {
@@ -63,9 +65,9 @@ public class HeldKarpAlgorithm {
         }
 
         // Rekonstrukcja ścieżki
-        ArrayList<Point> path = reconstructPath(parent, fullSet, lastCity, points);
-        path.add(points.get(0)); // Powrót do startu
-        return path;
+        ArrayList <Point> solutionPath = reconstructPath(parent, fullSet, lastCity, entryPointList);
+        solutionPath.add(entryPointList.get(0)); // Powrót do startu
+        return solutionPath;
     }
 
     private static ArrayList<Point> reconstructPath(int[][] parent, int subset, int last, ArrayList<Point> points) {
