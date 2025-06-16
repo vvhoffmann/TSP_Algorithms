@@ -22,7 +22,7 @@ public class TestGrahamAlgorithm {
     @Test
     public void convexHullFromRandomPointsTest() {
         ArrayList<Point> points = PointUtils.createRandomPoints(100);
-        ArrayList<Point> convexHull = GrahamAlgorithm.convexHullFinder(points);
+        ArrayList<Point> convexHull = GrahamAlgorithm.getConvexHull(points);
 
         for(int i=0 ; i<convexHull.size() ; ++i){
             Point A = convexHull.get(i);
@@ -49,7 +49,7 @@ public class TestGrahamAlgorithm {
 
         Assert.assertEquals(points.size(), 10);
 
-        ArrayList<Point> convexHull = GrahamAlgorithm.convexHullFinder(points);
+        ArrayList<Point> convexHull = GrahamAlgorithm.getConvexHull(points);
 
         ArrayList<Point> solution = new ArrayList<>();
         solution.add(new Point(90,1));
@@ -91,14 +91,14 @@ public class TestGrahamAlgorithm {
         ArrayList<Point> points = PointUtils.createRandomPoints(100);
 
         long millisActualTime = System.currentTimeMillis(); // początkowy czas w milisekundach.
-        ArrayList<Point> convexHull = GrahamAlgorithm.convexHullFinder(points);
+        ArrayList<Point> convexHull = GrahamAlgorithm.getConvexHull(points);
         long executionTime = System.currentTimeMillis() - millisActualTime; // czas wykonania programu w milisekundach.
         System.out.println("Czas wykonania dla 100 punktów: "+executionTime+" ms");
 
         points = PointUtils.createRandomPoints(500);
 
         millisActualTime = System.currentTimeMillis(); // początkowy czas w milisekundach.
-        convexHull = GrahamAlgorithm.convexHullFinder(points);
+        convexHull = GrahamAlgorithm.getConvexHull(points);
         executionTime = System.currentTimeMillis() - millisActualTime; // czas wykonania programu w milisekundach.
         System.out.println("Czas wykonania dla 500 punktów: "+executionTime+" ms");
     }

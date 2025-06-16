@@ -14,101 +14,122 @@ public class QuasiOptimizationAlgorithm extends TSPSolution {
 
     @Override
     public ArrayList<Point> getTSPSolution(ArrayList<Point> points) {
+        this.points = points;
         calculateConvexHull(points);
+        resultPoints = insertNotAssignedPointsIntoPath(getNotAssignedPointsList());
 
-        //printConvexHull();
-
-        resultPoints = findPlaceForPoints(createNotAssignedPointsArray());
-
-        System.out.println(resultPoints);
         return resultPoints;
     }
 
     private void calculateConvexHull(ArrayList<Point> points) {
-        this.points = points;
         this.convexHull = GrahamAlgorithm.getConvexHull(points);
         resultPoints.addAll(convexHull);
     }
 
-    private void printConvexHull() {
-        System.out.println("Graham Scan Convex Hull:");
-        for (Point point : convexHull) System.out.print(points.indexOf(point) + ":" + point + ",  ");
-        System.out.println();
-    }
+    private ArrayList<Point> getNotAssignedPointsList() {
+        ArrayList<Point> notAssignedPoints = new ArrayList<>(points);
+        notAssignedPoints.removeAll(convexHull);
 
-    private ArrayList<Point> createNotAssignedPointsArray() {
-        ArrayList<Point> pointsInside = new ArrayList<>(points);
-        pointsInside.removeAll(convexHull);
-
-        return pointsInside;
+        return notAssignedPoints;
     }
 
     //zwraca numer indexu w tablicy pod który należy dodać punkt
-    //np. Jeśli chcemy wstawić punkt N, pomiedzy C i D, zwrócony zostanie index punktu D
-    private ArrayList<Point> findPlaceForPoints(ArrayList<Point> insidePoints) {
+    //np. Jeśli chcemy wstawić punkt P, pomiedzy C i D, zwrócony zostanie index punktu D
+    private ArrayList<Point> insertNotAssignedPointsIntoPath(ArrayList<Point> insidePoints) {
         while (!insidePoints.isEmpty()) {
-            int indP = 0;
-            int indB = -1;
-            double d_min = -1;
+            int selectedPointIndex = 0;
+            int bestInsertIndex = Integer.MIN_VALUE;
+            double minimalDistance = Double.MAX_VALUE;
+
             for (int p = 0; p < insidePoints.size(); ++p) {
-                Point pointP = insidePoints.get(p);
-                for (int r = 0; r < resultPoints.size(); ++r) {
-                    int tmpA = r == 0 ? resultPoints.size() - 1 : r - 1; //result future location : pointA pointP pointB
-                    Point pointA = resultPoints.get(tmpA);
-                    Point pointB = resultPoints.get(r);
+                Point pointToInsert = insidePoints.get(p);
+                InsertionResult insertionResult = findBestInsertionForPoint(pointToInsert);
 
-                    Point projectionPoint = PointUtils.projection(pointA, pointB, pointP);
-                    double APro = PointUtils.distance(pointA, projectionPoint);
-                    double BPro = PointUtils.distance(pointB, projectionPoint);
-                    double AP = PointUtils.distance(pointA, pointP);
-                    double BP = PointUtils.distance(pointB, pointP);
-                    double AB = PointUtils.distance(pointA, pointB);
-                    double PPro = PointUtils.distance(projectionPoint, pointP); // shortest way from pointP to segment, length
-
-                    int tmpR = r;
-                    //if (AB * AB <= AP * AP + BP * BP) PPro = (AP + BP) / 2; //ten fragment pochodzi z notatek Pani Tatiany, jednak algorytm nie działa wtedy poprawnie i nie rozumiem za bardzo
-                    //zamiast tego
-                    if (APro + BPro > AB) { //punkt, którego projekcja nie przypada na odcinku AB
-                        int tmpIndex;
-                        //krótsze ramie może być takie samo dla 2 sąsiednich odcinków, więc należy sprawdzić, który z nich będzie lepszy dla punktu
-                        if (AP < BP) { //index od pointA -1
-                            tmpIndex = tmpA == 0 ? resultPoints.size() - 1 : tmpA - 1;
-                            if (PPro < PointUtils.distance(pointP, PointUtils.projection(resultPoints.get(tmpIndex), pointA, pointP)))
-                                tmpR = tmpIndex;
-                        } else { //index od pointB +1
-                            tmpIndex = (r == resultPoints.size() - 1) ? 0 : r + 1;
-                            if (PPro < PointUtils.distance(pointP, PointUtils.projection(pointB, resultPoints.get(tmpIndex), pointP)))
-                                tmpR = tmpIndex;
-                        }
-                        PPro = Math.min(2*AP, 2*BP);//(AP + BP) / 2;//
-                    }
-
-                    if (d_min < 0 || (d_min > PPro)) {
-                        d_min = PPro;
-                        indP = p;
-                        indB = tmpR;
-                    }
+                if (minimalDistance > insertionResult.distance) {
+                    minimalDistance = insertionResult.distance;
+                    bestInsertIndex = insertionResult.insertIndex;
+                    selectedPointIndex = p;
                 }
             }
-            Point targetPoint = insidePoints.get(indP);
-            addPointtoTheRoad(indB, targetPoint);
-            insidePoints.remove(indP);
+            Point selectedPoint = insidePoints.remove(selectedPointIndex);
+            addTargetPointIntoResult(bestInsertIndex, selectedPoint);
         }
         return resultPoints;
     }
 
-    private void addPointtoTheRoad(int index, Point point) {
-        /*System.out.println("Dodaje Punkt " + points.indexOf(point) + " [" + point.x + ", " + point.y +
-                "] pod index " + index +
-                " pomiedzy punkt " + points.indexOf(resultPoints.get(index == 0 ? resultPoints.size() - 1 : index - 1)) +
-                " i " + points.indexOf(resultPoints.get(index)));*/
+    private InsertionResult findBestInsertionForPoint(Point pointToInsert) {
+        double bestDistance = Double.MAX_VALUE;
+        int bestInsertIndex = -1;
 
-        resultPoints.add(index, point);
+        for (int p = 0; p < resultPoints.size(); ++p) {
+            //result point future location : segmentStart - pointToInsert - segmentEnd
+            int previousIndex = (p == 0) ? resultPoints.size() - 1 : p - 1;
+            Point segmentStart = resultPoints.get(previousIndex);
+            Point segmentEnd = resultPoints.get(p);
 
-//        System.out.println(resultPoints);
+            Point projectionPoint = PointUtils.projection(segmentStart, segmentEnd, pointToInsert);
+            double segmentLength = PointUtils.distance(segmentStart, segmentEnd);
+            double aToProjectionLength = PointUtils.distance(segmentStart, projectionPoint);
+            double bToProjectionLength = PointUtils.distance(segmentEnd, projectionPoint);
+            double pointToProjectionLength = PointUtils.distance(projectionPoint, pointToInsert);
+
+            int insertionIndex = p;
+
+            //if (segmentLength * segmentLength <= AP * AP + BP * BP) pointToProjectionLength = (AP + BP) / 2;
+            //punkt, którego projekcja nie przypada na odcinku segmentLength
+            if (aToProjectionLength + bToProjectionLength > segmentLength) {
+                // Krótsze ramie może być takie samo dla 2 sąsiednich odcinków, więc należy sprawdzić, który z nich będzie lepszy dla punktu
+                // IF index od segmentStart -1
+                // ELSE index od segmentEnd +1
+                insertionIndex = findBetterProjectionAlternative(pointToInsert, segmentStart, segmentEnd, pointToProjectionLength, p, previousIndex);
+                pointToProjectionLength = estimateOffSegmentPenalty(pointToInsert, segmentStart, segmentEnd);
+            }
+
+            if(pointToProjectionLength < bestDistance) {
+                bestDistance = pointToProjectionLength;
+                bestInsertIndex = insertionIndex;
+            }
+        }
+        return new InsertionResult(bestInsertIndex, bestDistance);
     }
 
-    public ArrayList<Point> getConvexHull() {
-        return convexHull;
+    private double estimateOffSegmentPenalty(Point pointToInsert, Point segmentStart, Point segmentEnd) {
+        return Math.min(2 * PointUtils.distance(segmentStart, pointToInsert), 2 * PointUtils.distance(segmentEnd, pointToInsert));
+    }
+
+    private int findBetterProjectionAlternative(Point pointToInsert, Point segmentStart, Point segmentEnd, double pointToProjetionLength, int currentIndex, int previousIndex) {
+        double distanceFromPointToStart = PointUtils.distance(segmentStart, pointToInsert);
+        double distanceFromPointToEnd = PointUtils.distance(segmentEnd, pointToInsert);
+
+        if (distanceFromPointToStart < distanceFromPointToEnd) {
+            int candidateIndex = (previousIndex == 0) ? resultPoints.size() - 1 : previousIndex - 1;
+            Point candidateStart = resultPoints.get(candidateIndex);
+            Point projectionPoint = PointUtils.projection(candidateStart, segmentStart, pointToInsert);
+            if (PointUtils.distance(pointToInsert, projectionPoint) > pointToProjetionLength)
+                return candidateIndex;
+        } else {
+            int candidateIndex = (currentIndex == resultPoints.size() - 1) ? 0 : currentIndex + 1;
+            Point candidateEnd = resultPoints.get(candidateIndex);
+            Point projectionPoint = PointUtils.projection(segmentEnd, candidateEnd, pointToInsert);
+            if (PointUtils.distance(pointToInsert, projectionPoint) > pointToProjetionLength)
+                return candidateIndex;
+        }
+
+        return currentIndex;
+    }
+
+    private void addTargetPointIntoResult(int index, Point point) {
+        resultPoints.add(index, point);
+    }
+
+    // Helper class for returning both index and distance
+    private static class InsertionResult {
+        int insertIndex;
+        double distance;
+
+        InsertionResult(int insertIndex, double distance) {
+            this.insertIndex = insertIndex;
+            this.distance = distance;
+        }
     }
 }
