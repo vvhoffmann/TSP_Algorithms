@@ -1,4 +1,4 @@
-package org.example.Algorithms.SAAlgorithm;
+package wit.wh.Algorithms.SAAlgorithm;
 
 public class SAParameters {
     private double startingTemperature = 10;

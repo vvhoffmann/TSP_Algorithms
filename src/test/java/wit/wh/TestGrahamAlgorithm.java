@@ -1,6 +1,8 @@
-import org.example.Algorithms.QuasiOptimizationAlgorithm.GrahamAlgorithm;
-import org.example.pointUtils.Point;
-import org.example.pointUtils.PointUtils;
+package wit.wh;
+
+import wit.wh.Algorithms.QuasiOptimizationAlgorithm.GrahamAlgorithm;
+import wit.wh.pointUtils.Point;
+import wit.wh.pointUtils.PointUtils;
 import org.junit.Assert;
 import org.junit.Test;
 

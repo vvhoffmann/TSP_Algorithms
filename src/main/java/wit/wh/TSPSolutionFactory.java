@@ -1,15 +1,14 @@
-package org.example;
+package wit.wh;
 
-import org.example.Algorithms.AntColony.AntColonyQuasiOptimizationAlgorithm;
-import org.example.Algorithms.AntColony.AntsParameters;
-import org.example.Algorithms.HeldKarpAlgorithm;
-import org.example.Algorithms.NearestNeighbourAlgorithm;
-import org.example.Algorithms.QuasiOptimizationAlgorithm.GrahamAlgorithm;
-import org.example.Algorithms.QuasiOptimizationAlgorithm.QuasiOptimizationAlgorithm;
-import org.example.Algorithms.RepetitiveNearestNeighbourAlgorithm;
-import org.example.Algorithms.SAAlgorithm.SAAlgorithm;
-import org.example.Algorithms.SAAlgorithm.SAParameters;
-import org.example.pointUtils.Point;
+import wit.wh.Algorithms.AntColony.AntColonyQuasiOptimizationAlgorithm;
+import wit.wh.Algorithms.AntColony.AntsParameters;
+import wit.wh.Algorithms.HeldKarpAlgorithm;
+import wit.wh.Algorithms.NearestNeighbourAlgorithm;
+import wit.wh.Algorithms.QuasiOptimizationAlgorithm.QuasiOptimizationAlgorithm;
+import wit.wh.Algorithms.RepetitiveNearestNeighbourAlgorithm;
+import wit.wh.Algorithms.SAAlgorithm.SAAlgorithm;
+import wit.wh.Algorithms.SAAlgorithm.SAParameters;
+import wit.wh.pointUtils.Point;
 
 import java.util.ArrayList;
 import java.util.HashMap;

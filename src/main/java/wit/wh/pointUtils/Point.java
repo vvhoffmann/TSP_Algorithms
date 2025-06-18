@@ -1,4 +1,4 @@
-package org.example.pointUtils;
+package wit.wh.pointUtils;
 
 import java.awt.geom.Point2D;
 

@@ -1,14 +1,7 @@
-package org.example;
+package wit.wh;
 
-import org.example.Algorithms.AntColony.AntColonyQuasiOptimizationAlgorithm;
-import org.example.Algorithms.AntColony.AntsParameters;
-import org.example.Algorithms.HeldKarpAlgorithm;
-import org.example.Algorithms.NearestNeighbourAlgorithm;
-import org.example.Algorithms.QuasiOptimizationAlgorithm.QuasiOptimizationAlgorithm;
-import org.example.Algorithms.RepetitiveNearestNeighbourAlgorithm;
-import org.example.Algorithms.SAAlgorithm.SAAlgorithm;
-import org.example.pointUtils.Point;
-import org.example.pointUtils.PointUtils;
+import wit.wh.pointUtils.Point;
+import wit.wh.pointUtils.PointUtils;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -22,7 +15,6 @@ import org.jfree.data.xy.XYSeriesCollection;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 

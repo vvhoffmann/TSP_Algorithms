@@ -1,7 +1,8 @@
-package org.example.Algorithms.SAAlgorithm;
+package wit.wh.Algorithms.SAAlgorithm;
 
-import org.example.TSPSolution;
-import org.example.pointUtils.Point;
+import wit.wh.TSPSolution;
+import wit.wh.pointUtils.PathUtils;
+import wit.wh.pointUtils.Point;
 
 import java.util.ArrayList;
 
@@ -40,7 +41,7 @@ public class SAAlgorithm extends TSPSolution {
 
         }
         logFinalInfo(bestDistance);
-        return currentPath.getPoints();
+        return PathUtils.returnRoundPath(currentPath.getPoints());
     }
 
     private void initializePath(ArrayList<Point> points) {

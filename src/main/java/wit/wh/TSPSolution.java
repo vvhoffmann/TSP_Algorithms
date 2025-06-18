@@ -1,7 +1,7 @@
-package org.example;
+package wit.wh;
 
-import org.example.pointUtils.Point;
-import org.example.pointUtils.PointUtils;
+import wit.wh.pointUtils.Point;
+import wit.wh.pointUtils.PointUtils;
 
 import java.util.ArrayList;
 

@@ -1,4 +1,4 @@
-package org.example.Algorithms.AntColony;
+package wit.wh.Algorithms.AntColony;
 
 import java.util.stream.Stream;
 

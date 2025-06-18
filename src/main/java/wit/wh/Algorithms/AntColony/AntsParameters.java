@@ -1,4 +1,4 @@
-package org.example.Algorithms.AntColony;
+package wit.wh.Algorithms.AntColony;
 
 /*
  * source: https://github.com/RonitRay/Ant-Colony-Optimization/blob/master/src/AntColonyOptimization.java

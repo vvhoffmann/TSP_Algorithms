@@ -1,9 +1,9 @@
-package org.example;
+package wit.wh;
 
 
-import org.example.Algorithms.QuasiOptimizationAlgorithm.GrahamAlgorithm;
-import org.example.pointUtils.Point;
-import org.example.pointUtils.PointUtils;
+import wit.wh.Algorithms.QuasiOptimizationAlgorithm.GrahamAlgorithm;
+import wit.wh.pointUtils.Point;
+import wit.wh.pointUtils.PointUtils;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -21,18 +21,26 @@ import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
+
+/**
+ * Main application window that visualizes TSP solution and convex hull using JFreeChart.
+ * The class generates random points, computes their convex hull and TSP solution,
+ * and displays the result in a Swing window.
+ */
 public class Main extends JFrame {
-    private static final int POINT_COUNT = 25;
+    private static final int POINT_COUNT = 15;
     private static final int WINDOW_SIZE = 850;
-    private static final int FONT_SIZE = 14;
 
     private final XYSeriesCollection dataset = new XYSeriesCollection();
     private final ArrayList<Point> allPoints;
     private final ArrayList<Point> convexHullPoints;
     private final ArrayList<Point> solutionPoints;
 
+    /**
+     * Constructs the main window and initializes the TSP and Convex Hull solutions.
+     */
     public Main() {
-        this.allPoints = PointUtils.createRandomPoints(POINT_COUNT);//Point.getReadyPoints();
+        this.allPoints = PointUtils.getReadyPoints();//PointUtils.createRandomPoints(POINT_COUNT);
         this.convexHullPoints = GrahamAlgorithm.getConvexHull(allPoints);
         this.solutionPoints = TSPSolutionFactory.createSolution(SolutionType.QUASI_OPTIMIZATION_ALGORITHM, allPoints);
 
@@ -44,11 +52,20 @@ public class Main extends JFrame {
         setContentPane(chartPanel);
     }
 
+    /**
+     * Adds the TSP and convex hull point segments to the dataset for plotting.
+     */
     private void addSeriesToDataset() {
         createPointConnections(solutionPoints, "TSPSolution");
         createPointConnections(convexHullPoints, "ConvexHull");
     }
 
+    /**
+     * Creates line segments between consecutive points and adds them to the dataset.
+     *
+     * @param seriesPoints Points representing either the convex hull or TSP path.
+     * @param name         Name prefix for the series (used in chart labeling).
+     */
     private void createPointConnections(ArrayList<Point> seriesPoints, String name) {
         XYSeries segment;
 
@@ -65,6 +82,11 @@ public class Main extends JFrame {
         }
     }
 
+    /**
+     * Creates and configures the chart that visualizes the dataset.
+     *
+     * @return A configured {@link JFreeChart} object.
+     */
     private JFreeChart createChart() {
         return ChartFactory.createXYLineChart(
                 "TSP Solver", // Chart title
@@ -75,12 +97,23 @@ public class Main extends JFrame {
                 false, true, false);
     }
 
+    /**
+     * Creates and configures the chart panel.
+     *
+     * @param chart The chart to be embedded in the panel.
+     * @return A configured {@link ChartPanel}.
+     */
     private static ChartPanel createChartPanel(JFreeChart chart) {
         ChartPanel chartPanel = new ChartPanel(chart);
         chartPanel.setPreferredSize(new Dimension(WINDOW_SIZE, WINDOW_SIZE));
         return chartPanel;
     }
 
+    /**
+     * Configures the plot style and annotations.
+     *
+     * @param chart The chart whose plot is to be configured.
+     */
     private void configurePlot(JFreeChart chart) {
         XYLineAndShapeRenderer renderer = getXyLineAndShapeRenderer();
 
@@ -89,6 +122,11 @@ public class Main extends JFrame {
         plot.setRenderer(renderer);
     }
 
+    /**
+     * Creates and configures the line renderer used for drawing the chart.
+     *
+     * @return A configured {@link XYLineAndShapeRenderer}.
+     */
     private XYLineAndShapeRenderer getXyLineAndShapeRenderer() {
         XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer(true, false);
         renderer.setBaseToolTipGenerator(new StandardXYToolTipGenerator());
@@ -97,6 +135,11 @@ public class Main extends JFrame {
         return renderer;
     }
 
+    /**
+     * Configures the rendering style for the convex hull segments.
+     *
+     * @param renderer The renderer to be configured.
+     */
     private void configureRerenderForConvexHullPoints(XYLineAndShapeRenderer renderer) {
         for (int i = solutionPoints.size(); i < solutionPoints.size() + convexHullPoints.size() - 1; ++i) {
             renderer.setSeriesPaint(i, Color.RED);
@@ -106,6 +149,11 @@ public class Main extends JFrame {
         }
     }
 
+    /**
+     * Configures the rendering style for the TSP solution segments.
+     *
+     * @param renderer The renderer to be configured.
+     */
     private void configureRerenderForSolutionPoints(XYLineAndShapeRenderer renderer) {
         for (int i = 0; i < solutionPoints.size(); ++i) {
             renderer.setSeriesPaint(i, Color.YELLOW);
@@ -115,6 +163,11 @@ public class Main extends JFrame {
         }
     }
 
+    /**
+     * Adds coordinate annotations to each point on the chart for easier identification.
+     *
+     * @param plot The plot to which annotations are added.
+     */
     private void addAnnotation(XYPlot plot) {
         for (int i = 0; i < allPoints.size(); ++i) {
             Point2D p = new Point2D.Double(allPoints.get(i).x, allPoints.get(i).y);
@@ -128,6 +181,11 @@ public class Main extends JFrame {
         }
     }
 
+    /**
+     * Application entry point.
+     *
+     * @param args Command-line arguments (unused).
+     */
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             Main chartWindow = new Main();

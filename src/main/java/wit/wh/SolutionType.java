@@ -1,4 +1,4 @@
-package org.example;
+package wit.wh;
 
 public enum SolutionType {
     HELD_KARP_ALGORITHM("Held Karp Solution"),

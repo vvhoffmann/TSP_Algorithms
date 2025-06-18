@@ -1,7 +1,7 @@
-package org.example.Algorithms.SAAlgorithm;
+package wit.wh.Algorithms.SAAlgorithm;
 
-import org.example.pointUtils.Point;
-import org.example.pointUtils.PointUtils;
+import wit.wh.pointUtils.Point;
+import wit.wh.pointUtils.PointUtils;
 
 import java.util.ArrayList;
 

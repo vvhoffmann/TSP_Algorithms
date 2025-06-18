@@ -1,8 +1,9 @@
-package org.example.Algorithms.AntColony;
+package wit.wh.Algorithms.AntColony;
 
-import org.example.TSPSolution;
-import org.example.pointUtils.Point;
-import org.example.pointUtils.PointUtils;
+import wit.wh.TSPSolution;
+import wit.wh.pointUtils.PathUtils;
+import wit.wh.pointUtils.Point;
+import wit.wh.pointUtils.PointUtils;
 
 import java.util.*;
 
@@ -53,7 +54,7 @@ public class AntColonyQuasiOptimizationAlgorithm extends TSPSolution {
         for(int i=1;i<=5;i++)
             result = solve();
 
-        return makeSolutionList(result);
+        return PathUtils.returnRoundPath(makeSolutionList(result));
     }
 
     private void initializeInitialValues(ArrayList<Point> points) {
