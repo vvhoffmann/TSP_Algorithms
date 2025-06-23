@@ -10,6 +10,7 @@ public class PathUtils {
 
     public final static int MIN_POINTS_TO_RUN_ALGORITHM = 2;
     public final static Random RANDOM = new Random();
+
     /**
      * Converts a path into a round-trip path by appending the starting point to the end.
      * <p>
