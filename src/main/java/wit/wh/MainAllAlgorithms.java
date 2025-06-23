@@ -1,7 +1,9 @@
 package wit.wh;
 
-import wit.wh.pointUtils.Point;
-import wit.wh.pointUtils.PointUtils;
+import wit.wh.algorithms.SolutionType;
+import wit.wh.algorithms.TSPSolutionFactory;
+import wit.wh.utils.Point;
+import wit.wh.utils.PointUtils;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -24,7 +26,7 @@ public class MainAllAlgorithms extends JFrame {
     private Map<SolutionType, ArrayList<Point>> solutions = new HashMap<>();
 
     public MainAllAlgorithms() {
-        points = PointUtils.createRandomPoints(20);
+        points = PointUtils.generateRandomPoints(20);
         solutions = TSPSolutionFactory.getAllSolutions(points);
         setLayout(new GridLayout(2, 3)); // Układ siatki 2x3
         setSize(1300, 900);

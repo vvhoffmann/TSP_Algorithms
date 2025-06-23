@@ -1,9 +1,12 @@
 package wit.wh;
 
 
-import wit.wh.Algorithms.QuasiOptimizationAlgorithm.GrahamAlgorithm;
-import wit.wh.pointUtils.Point;
-import wit.wh.pointUtils.PointUtils;
+import wit.wh.algorithms.QuasiOptimizationAlgorithm.GrahamAlgorithm;
+import wit.wh.algorithms.SAAlgorithm.SAParameters;
+import wit.wh.algorithms.SolutionType;
+import wit.wh.algorithms.TSPSolutionFactory;
+import wit.wh.utils.Point;
+import wit.wh.utils.PointUtils;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -41,8 +44,10 @@ public class Main extends JFrame {
      */
     public Main() {
         this.allPoints = PointUtils.getReadyPoints();//PointUtils.createRandomPoints(POINT_COUNT);
-        this.convexHullPoints = GrahamAlgorithm.getConvexHull(allPoints);
-        this.solutionPoints = TSPSolutionFactory.createSolution(SolutionType.QUASI_OPTIMIZATION_ALGORITHM, allPoints);
+        this.convexHullPoints = GrahamAlgorithm.getRoundConvexHull(allPoints);
+        //SAParameters parameters = new SAParameters(1000,0.01,10000, 0.995, 0.1);
+        //this.solutionPoints = TSPSolutionFactory.createSolutionWithParams(SolutionType.SA_ALGORITHM, allPoints, parameters).getSolutionPoints();
+        this.solutionPoints = TSPSolutionFactory.createSolution(SolutionType.QUASI_OPTIMIZATION_ALGORITHM, allPoints).getSolutionPoints();
 
         addSeriesToDataset();
         JFreeChart chart = createChart();
@@ -68,11 +73,6 @@ public class Main extends JFrame {
      */
     private void createPointConnections(ArrayList<Point> seriesPoints, String name) {
         XYSeries segment;
-
-        segment = new XYSeries(name + " SEGMENT 0");
-        segment.add(seriesPoints.get(0).x, seriesPoints.get(0).y);
-        segment.add(seriesPoints.get(seriesPoints.size() - 1).x, seriesPoints.get(seriesPoints.size() - 1).y);
-        dataset.addSeries(segment);
 
         for (int i = 0; i < seriesPoints.size() - 1; ++i) {
             segment = new XYSeries(name + " SEGMENT" + (i + 1));
