@@ -14,12 +14,27 @@ import java.util.ArrayList;
  * </p>
  */
 public class SASolution extends TSPSolution {
+
+    /**
+     * The current path being evaluated.
+     */
     private Path currentPath;
 
     /**
+     * The shortest distance found so far.
+     */
+    private double bestDistance;
+
+    /**
+     * The path that yields the shortest distance found so far.
+     */
+    private Path bestPath;
+
+    /**
      * Constructs the Simulated Annealing algorithm instance with the given ((SAParameters) parameters).
+     *
      * @param inputPoints the list of points representing the initial path
-     * @param parameters algorithm configuration settings
+     * @param parameters  algorithm configuration settings
      */
     public SASolution(ArrayList<Point> inputPoints, SAParameters parameters) {
         super(inputPoints, parameters);
@@ -27,98 +42,93 @@ public class SASolution extends TSPSolution {
 
     /**
      * Solves the TSP using Simulated Annealing and returns the optimized list of points.
+     * The process starts with an initial path and repeatedly attempts to improve it
+     * by randomly swapping points and accepting worse solutions with a probability
+     * that decreases over time (as temperature cools).
      *
      * @return optimized list of points forming a near-optimal TSP path
      */
     public ArrayList<Point> getTSPSolution() {
-        if (inputPoints == null)
-            return new ArrayList<>();
+        initializePath();
+        double currentTemperature = ((SAParameters) parameters).startingTemperature();
 
-        if(inputPoints.size() < PathUtils.MIN_POINTS_TO_RUN_ALGORITHM)
-            return inputPoints;
-
-        initializePath(inputPoints);
-        logStartingInfo();
-
-        double bestDistance = currentPath.getDistance();
-        double temperature = ((SAParameters) ((SAParameters) parameters)).startingTemperature();
-
-        for (int i = 0; i < ((SAParameters) parameters).numberOfIterations(); i++) {
-            if (temperature <= ((SAParameters) parameters).stoppingTemperature()) {
-                break;
+        for (int i = 0; i < parameters.numberOfIterations(); ++i) {
+            if (isAboveStoppingTemperature(currentTemperature)) {
+                performAnnealingStep(currentTemperature);
+                currentTemperature = getReducedTemperature(currentTemperature);
             }
-
-            performAnnealingStep(temperature);
-            temperature *= ((SAParameters) parameters).coolingRate();
-            bestDistance = Math.min(bestDistance, currentPath.getDistance());
         }
 
-        logFinalInfo(bestDistance);
-        return PathUtils.returnRoundPath(currentPath.getPoints());
+        return PathUtils.returnRoundPath(bestPath.getPoints());
     }
 
     /**
-     * Initializes the path with the given list of points.
+     * Calculates the reduced temperature for the next iteration
+     * by applying the cooling rate defined in the SAParameters.
      *
-     * @param points the initial list of points
+     * @param currentTemperature the current temperature before reduction
+     * @return the temperature after applying the cooling rate
      */
-    private void initializePath(ArrayList<Point> points) {
-        this.currentPath = new Path(new ArrayList<>(points));
+    private double getReducedTemperature(double currentTemperature) {
+        currentTemperature *= ((SAParameters) parameters).coolingRate();
+        return currentTemperature;
     }
 
     /**
-     * Performs a single iteration of the annealing process.
+     * Checks whether the current temperature is still above the stopping threshold
+     * defined in the SAParameters.
      *
-     * @param temperature current temperature of the system
+     * @param currentTemperature the current temperature
+     * @return {@code true} if the temperature is above the stopping threshold,
+     *         {@code false} otherwise
      */
-    private void performAnnealingStep(double temperature) {
+    private boolean isAboveStoppingTemperature(double currentTemperature) {
+        return currentTemperature > ((SAParameters) parameters).stoppingTemperature();
+    }
+
+    /**
+     * Initializes the current and best paths using the provided input points,
+     * and sets the initial best distance.
+     */
+    private void initializePath() {
+        this.currentPath = new Path(new ArrayList<>(inputPoints));
+        this.bestPath = new Path(new ArrayList<>(inputPoints));
+        bestDistance = currentPath.getDistance();
+    }
+
+    /**
+     * Performs one step of the Simulated Annealing algorithm by:
+     * <ul>
+     *     <li>Evaluating the distance after a swap.</li>
+     *     <li>Accepting it if it's better than the current best.</li>
+     *     <li>Otherwise, possibly reverting based on acceptance probability.</li>
+     * </ul>
+     *
+     * @param currentTemperature the current temperature in the annealing schedule
+     */
+    private void performAnnealingStep(double currentTemperature) {
         currentPath.swapRandomPoints();
+
         double newDistance = currentPath.getDistance();
-        double oldDistance = currentPath.getDistance(); // we can use cached or store prev
 
-        if (shouldAcceptNewSolution(oldDistance, newDistance, temperature)) {
-            // Accept new path (implicitly done)
-        } else {
+        if (newDistance < bestDistance){
+            bestDistance = newDistance;
+            bestPath = new Path(currentPath);
+        }
+        else if (shouldRevertSwap(bestDistance, newDistance, currentTemperature))
             currentPath.revertSwap();
-        }
     }
 
     /**
-     * Determines whether the new solution should be accepted.
-     * Accepts if it is better or with a probability based on temperature if worse.
+     * Determines whether to reject a worse solution based on simulated annealing acceptance probability.
      *
-     * @param oldDistance previous distance
-     * @param newDistance newly computed distance
-     * @param temperature current temperature
-     * @return true if the new solution should be accepted
+     * @param bestDistance the best distance found so far
+     * @param newDistance the new (worse) distance after a swap
+     * @param temperature the current temperature
+     * @return true if the swap should be reverted, false if it should be accepted
      */
-    private boolean shouldAcceptNewSolution(double oldDistance, double newDistance, double temperature) {
-        if (newDistance < oldDistance) {
-            return true;
-        }
-        double probability = Math.exp((oldDistance - newDistance) / temperature);
-        return probability > Math.random() * ((SAParameters) parameters).stepRate();
-    }
-
-    /**
-     * Logs initial algorithm configuration and starting distance.
-     */
-    private void logStartingInfo() {
-        System.out.printf(
-                "Starting Simulated Annealing with temperature: %.2f, iterations: %d, cooling rate: %.2f%n",
-                ((SAParameters) parameters).startingTemperature(),
-                parameters.numberOfIterations(),
-                ((SAParameters) parameters).coolingRate()
-        );
-        System.out.printf("Initial path distance: %.2f%n", currentPath.getDistance());
-    }
-
-    /**
-     * Logs the final distance after the algorithm finishes.
-     *
-     * @param bestDistance final optimized path distance
-     */
-    private void logFinalInfo(double bestDistance) {
-        System.out.printf("Final path distance: %.2f%n", bestDistance);
+    private boolean shouldRevertSwap(double bestDistance, double newDistance, double temperature) {
+        double acceptanceProbability = Math.exp((bestDistance - newDistance) / temperature);
+        return acceptanceProbability < Math.random() * ((SAParameters) parameters).stepRate();
     }
 }

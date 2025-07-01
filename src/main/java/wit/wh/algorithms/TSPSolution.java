@@ -2,7 +2,6 @@ package wit.wh.algorithms;
 
 import wit.wh.utils.PathUtils;
 import wit.wh.utils.Point;
-import wit.wh.utils.PointUtils;
 
 import java.util.ArrayList;
 
@@ -30,11 +29,6 @@ public abstract class TSPSolution {
     public ArrayList<Point> inputPoints;
 
     /**
-     * The total route length (distance) of the computed solution path.
-     */
-    protected double routeLength;
-
-    /**
      * Constructs a TSP solution with custom algorithm parameters.
      *
      * @param inputPoints the input list of points representing cities
@@ -44,7 +38,6 @@ public abstract class TSPSolution {
         this.inputPoints = inputPoints;
         this.parameters = parameters;
         this.solutionPoints = setSolutionPoints();
-        this.routeLength = calculateRouteLength();
     }
 
     /**
@@ -55,7 +48,6 @@ public abstract class TSPSolution {
     public TSPSolution(ArrayList<Point> inputPoints) {
         this.inputPoints = inputPoints;
         this.solutionPoints = setSolutionPoints();
-        this.routeLength = calculateRouteLength();
     }
 
     /**
@@ -89,14 +81,7 @@ public abstract class TSPSolution {
      * @return the total route length
      */
     protected double calculateRouteLength() {
-        double route = 0;
-        for (int i = 0; i < solutionPoints.size(); i++) {
-            if (i == solutionPoints.size() - 1)
-                route += PointUtils.distance(solutionPoints.get(i), solutionPoints.get(0));
-            else
-                route += PointUtils.distance(solutionPoints.get(i), solutionPoints.get(i + 1));
-        }
-        return route;
+        return PathUtils.getRouteLength(inputPoints);
     }
 
     /**
@@ -106,15 +91,6 @@ public abstract class TSPSolution {
      */
     public ArrayList<Point> getSolutionPoints() {
         return solutionPoints;
-    }
-
-    /**
-     * Returns the total length of the computed route.
-     *
-     * @return the total route length
-     */
-    public double getRouteLength() {
-        return routeLength;
     }
 
     /**

@@ -2,8 +2,9 @@ package wit.wh;
 
 
 import wit.wh.algorithms.QuasiOptimizationAlgorithm.GrahamAlgorithm;
-import wit.wh.algorithms.SAAlgorithm.SAParameters;
+
 import wit.wh.algorithms.SolutionType;
+
 import wit.wh.algorithms.TSPSolutionFactory;
 import wit.wh.utils.Point;
 import wit.wh.utils.PointUtils;
@@ -38,17 +39,20 @@ public class Main extends JFrame {
     private final ArrayList<Point> allPoints;
     private final ArrayList<Point> convexHullPoints;
     private final ArrayList<Point> solutionPoints;
+    private final String title;
 
     /**
      * Constructs the main window and initializes the TSP and Convex Hull solutions.
      */
     public Main() {
-        this.allPoints = PointUtils.getReadyPoints();//PointUtils.createRandomPoints(POINT_COUNT);
+        this.allPoints = PointUtils.getReadyPoints(); //PointUtils.generateRandomPoints(POINT_COUNT);
+
         this.convexHullPoints = GrahamAlgorithm.getRoundConvexHull(allPoints);
+        SolutionType solutionType = SolutionType.HELD_KARP_ALGORITHM;
         //SAParameters parameters = new SAParameters(1000,0.01,10000, 0.995, 0.1);
         //this.solutionPoints = TSPSolutionFactory.createSolutionWithParams(SolutionType.SA_ALGORITHM, allPoints, parameters).getSolutionPoints();
-        this.solutionPoints = TSPSolutionFactory.createSolution(SolutionType.QUASI_OPTIMIZATION_ALGORITHM, allPoints).getSolutionPoints();
-
+        solutionPoints = TSPSolutionFactory.createSolution(solutionType, allPoints).getSolutionPoints();
+        title = solutionType.getName();
         addSeriesToDataset();
         JFreeChart chart = createChart();
         ChartPanel chartPanel = createChartPanel(chart);
@@ -89,7 +93,7 @@ public class Main extends JFrame {
      */
     private JFreeChart createChart() {
         return ChartFactory.createXYLineChart(
-                "TSP Solver", // Chart title
+                title,
                 "x",
                 "y",
                 dataset,
@@ -141,7 +145,7 @@ public class Main extends JFrame {
      * @param renderer The renderer to be configured.
      */
     private void configureRerenderForConvexHullPoints(XYLineAndShapeRenderer renderer) {
-        for (int i = solutionPoints.size(); i < solutionPoints.size() + convexHullPoints.size() - 1; ++i) {
+        for (int i = solutionPoints.size() -1; i < solutionPoints.size() + convexHullPoints.size() ; ++i) {
             renderer.setSeriesPaint(i, Color.RED);
             renderer.setSeriesItemLabelsVisible(i, true);
             renderer.setSeriesItemLabelFont(i, renderer.getBaseItemLabelFont().deriveFont(14f));

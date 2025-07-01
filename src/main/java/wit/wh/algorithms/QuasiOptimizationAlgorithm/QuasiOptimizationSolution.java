@@ -37,9 +37,7 @@ public class QuasiOptimizationSolution extends TSPSolution {
         buildConvexHull(inputPoints);
         insertNotAssignedPointsIntoPath(getNotAssignedPointsList());
 
-        PathUtils.returnRoundPath(resultPath);
-        System.out.println(resultPath);
-        return resultPath;
+        return PathUtils.returnRoundPath(resultPath);
     }
 
     /**

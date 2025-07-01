@@ -1,5 +1,7 @@
 package wit.wh.utils;
 
+import wit.wh.algorithms.TSPSolution;
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -23,5 +25,26 @@ public class PathUtils {
     public static ArrayList<Point> returnRoundPath(ArrayList<Point> points) {
         points.add(points.get(0));
         return points;
+    }
+
+    public static double getRouteLength(ArrayList<Point> points) {
+        double distance = 0;
+        if(!(points.get(0) == points.get(points.size() - 1))){
+            Point starting = points.get(0);
+            Point destination = points.get(points.size() - 1);
+            distance = PointUtils.distance(starting, destination);
+        }
+
+        for (int index = 0; index < points.size()-1; index++) {
+            Point starting = points.get(index);
+            Point destination = points.get(index + 1);
+            distance += PointUtils.distance(starting,destination);
+        }
+
+        return distance;
+    }
+
+    public static double getRouteLength(TSPSolution solution) {
+        return PathUtils.getRouteLength(solution.getSolutionPoints());
     }
 }

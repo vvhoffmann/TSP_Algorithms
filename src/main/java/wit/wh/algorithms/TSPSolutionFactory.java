@@ -1,7 +1,7 @@
 package wit.wh.algorithms;
 
-import wit.wh.algorithms.AntColonyQuasiOptimizationAlgorithm.AntColonyQuasiOptimizationSolution;
-import wit.wh.algorithms.AntColonyQuasiOptimizationAlgorithm.AntColonyParameters;
+import wit.wh.algorithms.ACOAlgorithm.ACOSolution;
+import wit.wh.algorithms.ACOAlgorithm.ACOParameters;
 import wit.wh.algorithms.HeldKarpAlgorithm.HeldKarpSolution;
 import wit.wh.algorithms.NearestNeighbourSolution.NearestNeighbourSolution;
 import wit.wh.algorithms.QuasiOptimizationAlgorithm.QuasiOptimizationSolution;
@@ -38,8 +38,8 @@ public class TSPSolutionFactory {
                     new RepetitiveNearestNeighbourSolution(inputPoints);
             case SA_ALGORITHM ->
                     new SASolution(inputPoints, new SAParameters());
-            case ANT_COLONY_OPTIMIZATION_ALGORITHM ->
-                    new AntColonyQuasiOptimizationSolution(inputPoints, new AntColonyParameters());
+            case ACO_ALGORITHM ->
+                    new ACOSolution(inputPoints, new ACOParameters());
             case QUASI_OPTIMIZATION_ALGORITHM ->
                     new QuasiOptimizationSolution(inputPoints);
         };
@@ -58,8 +58,8 @@ public class TSPSolutionFactory {
         return switch (type) {
             case SA_ALGORITHM ->
                     new SASolution(inputPoints, (SAParameters) parameters);
-            case ANT_COLONY_OPTIMIZATION_ALGORITHM ->
-                    new AntColonyQuasiOptimizationSolution(inputPoints, (AntColonyParameters) parameters);
+            case ACO_ALGORITHM ->
+                    new ACOSolution(inputPoints, (ACOParameters) parameters);
             default ->
                     throw new IllegalArgumentException("Unrecognized solution type");
         };

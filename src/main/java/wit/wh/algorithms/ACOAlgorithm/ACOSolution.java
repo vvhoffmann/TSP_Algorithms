@@ -1,4 +1,4 @@
-package wit.wh.algorithms.AntColonyQuasiOptimizationAlgorithm;
+package wit.wh.algorithms.ACOAlgorithm;
 
 import wit.wh.algorithms.TSPSolution;
 import wit.wh.utils.PathUtils;
@@ -15,7 +15,7 @@ import java.util.*;
  *   <li>https://www.baeldung.com/java-ant-colony-optimization</li>
  * </ul>
  */
-public class AntColonyQuasiOptimizationSolution extends TSPSolution {
+public class ACOSolution extends TSPSolution {
 
     private int numberOfPoints;
     private int numberOfAnts;
@@ -34,7 +34,7 @@ public class AntColonyQuasiOptimizationSolution extends TSPSolution {
      * @param inputPoints     list of input points
      * @param parameters      parameters for ant colony optimization
      */
-    public AntColonyQuasiOptimizationSolution(ArrayList<Point> inputPoints, AntColonyParameters parameters) {
+    public ACOSolution(ArrayList<Point> inputPoints, ACOParameters parameters) {
         super(inputPoints, parameters);
     }
 
@@ -59,7 +59,7 @@ public class AntColonyQuasiOptimizationSolution extends TSPSolution {
     private void initialize(ArrayList<Point> inputPoints) {
         this.inputPoints = inputPoints;
         this.numberOfPoints = inputPoints.size();
-        this.numberOfAnts = (int) (numberOfPoints * ((AntColonyParameters) parameters()).antFactor());
+        this.numberOfAnts = (int) (numberOfPoints * ((ACOParameters) parameters()).antFactor());
         this.graph = generateDistanceMatrix(inputPoints);
         this.trails = new double[numberOfPoints][numberOfPoints];
         this.probabilities = new double[numberOfPoints];
@@ -129,7 +129,7 @@ public class AntColonyQuasiOptimizationSolution extends TSPSolution {
      */
     private void initializeTrails() {
         for (int i = 0; i < numberOfPoints; i++) {
-            Arrays.fill(trails[i], ((AntColonyParameters) parameters()).c());
+            Arrays.fill(trails[i], ((ACOParameters) parameters()).initialPheromoneLevel());
         }
     }
 
@@ -149,7 +149,7 @@ public class AntColonyQuasiOptimizationSolution extends TSPSolution {
      * Selects the next city for the ant to visit.
      */
     private int selectNextCity(Ant ant) {
-        if (PathUtils.RANDOM.nextDouble() < ((AntColonyParameters) parameters()).randomFactor()) {
+        if (PathUtils.RANDOM.nextDouble() < ((ACOParameters) parameters()).randomFactor()) {
             return getRandomUnvisitedCity(ant);
         }
 
@@ -189,8 +189,8 @@ public class AntColonyQuasiOptimizationSolution extends TSPSolution {
 
         for (int j = 0; j < numberOfPoints; j++) {
             if (!ant.hasVisited(j)) {
-                double pheromone = Math.pow(trails[currentCity][j], ((AntColonyParameters) parameters()).alpha());
-                double distance = Math.pow(1.0 / graph[currentCity][j], ((AntColonyParameters) parameters()).beta());
+                double pheromone = Math.pow(trails[currentCity][j], ((ACOParameters) parameters()).alpha());
+                double distance = Math.pow(1.0 / graph[currentCity][j], ((ACOParameters) parameters()).beta());
                 probabilities[j] = pheromone * distance;
                 sum += probabilities[j];
             } else {
@@ -213,13 +213,13 @@ public class AntColonyQuasiOptimizationSolution extends TSPSolution {
         // Evaporation
         for (int i = 0; i < numberOfPoints; i++) {
             for (int j = 0; j < numberOfPoints; j++) {
-                trails[i][j] *= ((AntColonyParameters) parameters()).evaporation();
+                trails[i][j] *= ((ACOParameters) parameters()).evaporation();
             }
         }
 
         // Deposit
         for (Ant ant : ants) {
-            double contribution = ((AntColonyParameters) parameters()).Q() / ant.getTrailLength(graph);
+            double contribution = ((ACOParameters) parameters()).Q() / ant.getTrailLength(graph);
             for (int i = 0; i < numberOfPoints - 1; i++) {
                 trails[ant.trail[i]][ant.trail[i + 1]] += contribution;
             }
@@ -238,12 +238,5 @@ public class AntColonyQuasiOptimizationSolution extends TSPSolution {
                 bestTourOrder = ant.trail.clone();
             }
         }
-    }
-
-    /**
-     * Best tour length getter
-     */
-    public double getBestTourLength() {
-        return bestTourLength;
     }
 }

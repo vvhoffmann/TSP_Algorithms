@@ -1,16 +1,20 @@
 package wit.wh.algorithms;
 
 public enum SolutionType {
-    HELD_KARP_ALGORITHM("Held Karp Solution"),
-    NEAREST_NEIGHBOUR_ALGORITHM("Nearest Neighbour Solution"),
-    REPETITIVE_NEAREST_NEIGHBOUR_ALGORITHM("Repetitive Nearest Neighbour Solution"),
-    SA_ALGORITHM("SA Solution"),
-    ANT_COLONY_OPTIMIZATION_ALGORITHM("Ant Colony Optimization Solution"),
-    QUASI_OPTIMIZATION_ALGORITHM("Quasi Optimization Solution");
+    HELD_KARP_ALGORITHM("Algorytm Helda Karpa"),
+    NEAREST_NEIGHBOUR_ALGORITHM("Algorytm Najbliższego Sąsiada"),
+    REPETITIVE_NEAREST_NEIGHBOUR_ALGORITHM("Algorytm RNN"),
+    SA_ALGORITHM("Algorytm SA"),
+    ACO_ALGORITHM("Algorytm mrówkowy"),
+    QUASI_OPTIMIZATION_ALGORITHM("Algorytm Quasi-Optymalny");
 
     final String name;
 
     SolutionType(String name) {
         this.name = name;
+    }
+
+    public String getName() {
+        return name;
     }
 }

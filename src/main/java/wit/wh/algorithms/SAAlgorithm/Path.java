@@ -1,7 +1,7 @@
 package wit.wh.algorithms.SAAlgorithm;
 
+import wit.wh.utils.PathUtils;
 import wit.wh.utils.Point;
-import wit.wh.utils.PointUtils;
 
 import java.util.ArrayList;
 
@@ -21,8 +21,13 @@ public class Path {
      * @throws NullPointerException if the points list is null
      */
     public Path(ArrayList<Point> points) {
-        this.points = points;
+        this.points = new ArrayList<>(points);
         this.previousPoints = new ArrayList<>(points);
+    }
+
+    public Path(Path otherPath) {
+        this.points = new ArrayList<>(otherPath.getPoints());
+        this.previousPoints = new ArrayList<>(otherPath.getPoints());
     }
 
     /**
@@ -72,18 +77,7 @@ public class Path {
      * @return the total distance of the path
      */
     public double getDistance() {
-        double distance = 0;
-        for (int index = 0; index < points.size(); index++) {
-            Point starting = getPoint(index);
-            Point destination;
-            if (index == points.size() - 1)
-                destination = getPoint(0);
-            else
-                destination = getPoint(index + 1);
-
-            distance += PointUtils.distance(starting,destination);
-        }
-        return distance;
+        return PathUtils.getRouteLength(points);
     }
 
     /**

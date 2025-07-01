@@ -1,4 +1,4 @@
-package wit.wh.algorithms.AntColonyQuasiOptimizationAlgorithm;
+package wit.wh.algorithms.ACOAlgorithm;
 
 import java.util.Arrays;
 

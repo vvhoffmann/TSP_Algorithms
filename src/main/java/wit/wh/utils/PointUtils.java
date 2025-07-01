@@ -47,17 +47,6 @@ public class PointUtils {
     }
 
     /**
-     * Calculates the angle from point a to point b relative to the x-axis, normalized to [0, π).
-     *
-     * @param a the starting point
-     * @param b the destination point
-     * @return the angle in radians
-     */
-    public static double angle(Point a, Point b) {
-        return doubleMod(Math.atan2(b.y - a.y, b.x - a.x) + Math.PI, Math.PI);
-    }
-
-    /**
      * Generates a list of random, non-repeating points within a 25x25 grid.
      *
      * @param size the number of unique points to generate
@@ -82,29 +71,23 @@ public class PointUtils {
      */
     public static ArrayList<Point> getReadyPoints() {
         ArrayList<Point> inputPoints = new ArrayList<>();
-        inputPoints.add(new Point(75, 20));
-        inputPoints.add(new Point(63, 20));
-        inputPoints.add(new Point(58, 51));
-        inputPoints.add(new Point(4, 95));
-        inputPoints.add(new Point(23, 77));
-        inputPoints.add(new Point(90, 1));
-        inputPoints.add(new Point(96, 7));
-        inputPoints.add(new Point(76, 11));
+//        inputPoints.add(new Point(4, 95));
+//        inputPoints.add(new Point(23, 77));
+//        inputPoints.add(new Point(90, 1));
+//        inputPoints.add(new Point(96, 7));
+//        inputPoints.add(new Point(76, 11));
         inputPoints.add(new Point(95, 67));
         inputPoints.add(new Point(71, 45));
-        return inputPoints;
-    }
+        inputPoints.add(new Point(75, 20));
+        inputPoints.add(new Point(63, 34));
+        inputPoints.add(new Point(58, 51));
+        inputPoints.add(new Point(50.0, 30.0));
+        inputPoints.add(new Point(44.0, 22.0));
+        inputPoints.add(new Point(35.0, 40.0));
+        inputPoints.add(new Point(20.0, 5.0));
+        inputPoints.add(new Point(22.0, 52.0));
 
-    /**
-     * Calculates the shortest distance from point {@code p} to the line segment defined by points {@code a} and {@code b}.
-     *
-     * @param a start point of the segment
-     * @param b end point of the segment
-     * @param p the point to check against the segment
-     * @return the shortest distance from {@code p} to the segment
-     */
-    public static double calculateShortestWayToPoint(Point a, Point b, Point p) {
-        return Math.min(Math.min(distance(a, p), distance(b, p)), distance(projection(a, b, p), p));
+        return inputPoints;
     }
 
     /**

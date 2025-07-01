@@ -3,6 +3,7 @@ package wit.wh.sepreteAlgorithmsUnitTests;
 import org.junit.Test;
 import wit.wh.algorithms.SolutionType;
 import wit.wh.algorithms.TSPSolutionFactory;
+import wit.wh.utils.PathUtils;
 import wit.wh.utils.Point;
 import wit.wh.utils.PointUtils;
 
@@ -18,12 +19,26 @@ public class TestAntColonyParameters {
         ArrayList<Point> inputPoints = PointUtils.generateRandomPoints(15);
 
         //when
-        double solution1 = TSPSolutionFactory.createSolution(SolutionType.ANT_COLONY_OPTIMIZATION_ALGORITHM, inputPoints).getRouteLength();
-        double solution2 = TSPSolutionFactory.createSolution(SolutionType.ANT_COLONY_OPTIMIZATION_ALGORITHM, inputPoints).getRouteLength();
+        double solution1 = PathUtils.getRouteLength(
+                TSPSolutionFactory.createSolution(SolutionType.ACO_ALGORITHM, inputPoints)
+        );
+
+        double solution2 = PathUtils.getRouteLength(
+                TSPSolutionFactory.createSolution(SolutionType.ACO_ALGORITHM, inputPoints)
+                );
+
         Collections.shuffle(inputPoints);
-        double solution3 = TSPSolutionFactory.createSolution(SolutionType.ANT_COLONY_OPTIMIZATION_ALGORITHM, inputPoints).getRouteLength();
+
+        double solution3 = PathUtils.getRouteLength(
+                TSPSolutionFactory.createSolution(SolutionType.ACO_ALGORITHM, inputPoints)
+        );
+
         Collections.shuffle(inputPoints);
-        double solution4 = TSPSolutionFactory.createSolution(SolutionType.ANT_COLONY_OPTIMIZATION_ALGORITHM, inputPoints).getRouteLength();
+
+        double solution4 = PathUtils.getRouteLength(
+                TSPSolutionFactory.createSolution(SolutionType.ACO_ALGORITHM, inputPoints)
+        );
+
         ArrayList<Double> solutions = new ArrayList<>();
         solutions.add(solution1);
         solutions.add(solution2);
@@ -37,7 +52,6 @@ public class TestAntColonyParameters {
             }
         }
         solutions.remove(bestSolutionIndex);
-        //then
     }
     
 }

@@ -11,7 +11,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class TestAntColonyQuasiOptimizationSolution {
+public class TestACOSolution {
     /**
      * Test that null inputPoints returns an empty list.
      */
@@ -21,7 +21,7 @@ public class TestAntColonyQuasiOptimizationSolution {
         ArrayList<Point> inputPoints = null;
 
         //when
-        List<Point> result = TSPSolutionFactory.createSolution(SolutionType.ANT_COLONY_OPTIMIZATION_ALGORITHM, inputPoints).getSolutionPoints();
+        List<Point> result = TSPSolutionFactory.createSolution(SolutionType.ACO_ALGORITHM, inputPoints).getSolutionPoints();
 
         //then
         assertNotNull(result);
@@ -37,7 +37,7 @@ public class TestAntColonyQuasiOptimizationSolution {
         ArrayList<Point> inputPoints = new ArrayList<>();
 
         //when
-        List<Point> result = TSPSolutionFactory.createSolution(SolutionType.ANT_COLONY_OPTIMIZATION_ALGORITHM, inputPoints).getSolutionPoints();
+        List<Point> result = TSPSolutionFactory.createSolution(SolutionType.ACO_ALGORITHM, inputPoints).getSolutionPoints();
 
         //then
         assertNotNull(result);
@@ -55,7 +55,7 @@ public class TestAntColonyQuasiOptimizationSolution {
         inputPoints.add(p);
 
         //when
-        List<Point> result = TSPSolutionFactory.createSolution(SolutionType.ANT_COLONY_OPTIMIZATION_ALGORITHM, inputPoints).getSolutionPoints();
+        List<Point> result = TSPSolutionFactory.createSolution(SolutionType.ACO_ALGORITHM, inputPoints).getSolutionPoints();
 
         //then
         Assertions.assertEquals(1, result.size());
@@ -74,7 +74,7 @@ public class TestAntColonyQuasiOptimizationSolution {
         inputPoints.add(new Point(1, 1));
 
         //when
-        List<Point> result = TSPSolutionFactory.createSolution(SolutionType.ANT_COLONY_OPTIMIZATION_ALGORITHM, inputPoints).getSolutionPoints();
+        List<Point> result = TSPSolutionFactory.createSolution(SolutionType.ACO_ALGORITHM, inputPoints).getSolutionPoints();
 
         //then
         Assertions.assertEquals(result.get(0), result.get(result.size() - 1));
@@ -93,7 +93,7 @@ public class TestAntColonyQuasiOptimizationSolution {
         inputPoints.add(new Point(1, 1));
 
         //when
-        List<Point> result = TSPSolutionFactory.createSolution(SolutionType.ANT_COLONY_OPTIMIZATION_ALGORITHM, inputPoints).getSolutionPoints();
+        List<Point> result = TSPSolutionFactory.createSolution(SolutionType.ACO_ALGORITHM, inputPoints).getSolutionPoints();
         long distinctCount = result.subList(0, result.size() - 1).stream().distinct().count();
 
         //then
@@ -113,7 +113,7 @@ public class TestAntColonyQuasiOptimizationSolution {
             inputPoints.add(new Point(Math.random() * 100, Math.random() * 100));
 
         //when
-        ArrayList<Point> result = TSPSolutionFactory.createSolution(SolutionType.ANT_COLONY_OPTIMIZATION_ALGORITHM, inputPoints).getSolutionPoints();
+        ArrayList<Point> result = TSPSolutionFactory.createSolution(SolutionType.ACO_ALGORITHM, inputPoints).getSolutionPoints();
 
         //then
         Assertions.assertEquals(inputPoints.size() + 1, result.size());
