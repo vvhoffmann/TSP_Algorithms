@@ -1,4 +1,4 @@
-package wit.wh.algorithms.ACOAlgorithm;
+package wit.wh.algorithms.ACOSolution;
 
 import wit.wh.algorithms.AlgoritmParameters;
 

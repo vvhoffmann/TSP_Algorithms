@@ -1,13 +1,13 @@
 package wit.wh.algorithms;
 
-import wit.wh.algorithms.ACOAlgorithm.ACOSolution;
-import wit.wh.algorithms.ACOAlgorithm.ACOParameters;
-import wit.wh.algorithms.HeldKarpAlgorithm.HeldKarpSolution;
+import wit.wh.algorithms.ACOSolution.ACOSolution;
+import wit.wh.algorithms.ACOSolution.ACOParameters;
+import wit.wh.algorithms.HeldKarpSolution.HeldKarpSolution;
 import wit.wh.algorithms.NearestNeighbourSolution.NearestNeighbourSolution;
-import wit.wh.algorithms.QuasiOptimizationAlgorithm.QuasiOptimizationSolution;
+import wit.wh.algorithms.QuasiOptimizationSolution.QuasiOptimizationSolution;
 import wit.wh.algorithms.NearestNeighbourSolution.RepetitiveNearestNeighbourSolution;
-import wit.wh.algorithms.SAAlgorithm.SASolution;
-import wit.wh.algorithms.SAAlgorithm.SAParameters;
+import wit.wh.algorithms.SASolution.SASolution;
+import wit.wh.algorithms.SASolution.SAParameters;
 import wit.wh.utils.Point;
 
 import java.util.ArrayList;

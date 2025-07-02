@@ -1,6 +1,6 @@
 package wit.wh.parametersTests;
 
-import wit.wh.algorithms.ACOAlgorithm.ACOParameters;
+import wit.wh.algorithms.ACOSolution.ACOParameters;
 import wit.wh.algorithms.SolutionType;
 import wit.wh.algorithms.TSPSolutionFactory;
 import wit.wh.utils.PathUtils;
@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class TestAntColonyParameters {
     static final int TEST_RUNS_PER_CONFIG = 3;
     static final int MAX_POINT_COUNT = 15;
-    static final int[] pointCounts = {5, 7, 10, 12, MAX_POINT_COUNT};
+    static final int[] pointCounts = {5, 10, MAX_POINT_COUNT};
 
     // Zakres testowanych parametrów
     static final double[] initialPheromoneLevels = {0.01, 1.0, 10.0};

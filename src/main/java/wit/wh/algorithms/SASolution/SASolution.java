@@ -1,4 +1,4 @@
-package wit.wh.algorithms.SAAlgorithm;
+package wit.wh.algorithms.SASolution;
 
 import wit.wh.algorithms.TSPSolution;
 import wit.wh.utils.PathUtils;

@@ -1,4 +1,4 @@
-package wit.wh.algorithms.QuasiOptimizationAlgorithm;
+package wit.wh.algorithms.QuasiOptimizationSolution;
 
 import wit.wh.utils.PathUtils;
 import wit.wh.utils.Point;

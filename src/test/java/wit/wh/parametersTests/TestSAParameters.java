@@ -1,6 +1,6 @@
 package wit.wh.parametersTests;
 
-import wit.wh.algorithms.SAAlgorithm.SAParameters;
+import wit.wh.algorithms.SASolution.SAParameters;
 import wit.wh.algorithms.SolutionType;
 import wit.wh.algorithms.TSPSolutionFactory;
 import wit.wh.utils.PathUtils;
@@ -17,7 +17,7 @@ public class TestSAParameters {
     static final int TEST_RUNS_PER_CONFIG = 3;
     // Definiujemy zakres parametrów do testów
     static final int MAX_POINT_COUNT = 15;
-    static final int[] pointCounts = {5, 7, 10, 12, MAX_POINT_COUNT};
+    static final int[] pointCounts = {5, 10, MAX_POINT_COUNT};
     static final double[] startingTemperatures = {5, 10, 20, 25, 50};
     static final double[] coolingRates = {0.99, 0.995, 0.998, 0.999, 0.9995};
     static final int[] iterationsOptions = {100, 500, 1000, 2000, 5000};
@@ -32,7 +32,6 @@ public class TestSAParameters {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("SATest.txt"))) {
             writeTitleToFile(writer);
 
-            //int pointsCount = 10;
             for (int pointsCount : pointCounts) {
                 ArrayList<Point> points = new ArrayList<>(randomPoints.subList(0, pointsCount));
 

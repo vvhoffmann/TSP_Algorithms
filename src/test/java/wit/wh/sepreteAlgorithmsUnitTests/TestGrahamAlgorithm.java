@@ -1,6 +1,6 @@
 package wit.wh.sepreteAlgorithmsUnitTests;
 
-import wit.wh.algorithms.QuasiOptimizationAlgorithm.GrahamAlgorithm;
+import wit.wh.algorithms.QuasiOptimizationSolution.GrahamAlgorithm;
 import wit.wh.utils.Point;
 import wit.wh.utils.PointUtils;
 import org.junit.Assert;

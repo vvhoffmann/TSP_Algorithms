@@ -1,4 +1,4 @@
-package wit.wh.algorithms.HeldKarpAlgorithm;
+package wit.wh.algorithms.HeldKarpSolution;
 
 import wit.wh.algorithms.TSPSolution;
 import wit.wh.utils.PathUtils;

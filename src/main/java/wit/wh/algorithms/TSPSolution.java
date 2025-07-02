@@ -80,8 +80,8 @@ public abstract class TSPSolution {
      *
      * @return the total route length
      */
-    protected double calculateRouteLength() {
-        return PathUtils.getRouteLength(inputPoints);
+    public double getRouteLength() {
+        return PathUtils.getRouteLength(solutionPoints);
     }
 
     /**

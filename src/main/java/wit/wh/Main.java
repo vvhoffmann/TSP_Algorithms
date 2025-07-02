@@ -1,10 +1,11 @@
 package wit.wh;
 
 
-import wit.wh.algorithms.QuasiOptimizationAlgorithm.GrahamAlgorithm;
+import wit.wh.algorithms.QuasiOptimizationSolution.GrahamAlgorithm;
 
 import wit.wh.algorithms.SolutionType;
 
+import wit.wh.algorithms.TSPSolution;
 import wit.wh.algorithms.TSPSolutionFactory;
 import wit.wh.utils.Point;
 import wit.wh.utils.PointUtils;
@@ -45,14 +46,18 @@ public class Main extends JFrame {
      * Constructs the main window and initializes the TSP and Convex Hull solutions.
      */
     public Main() {
-        this.allPoints = PointUtils.getReadyPoints(); //PointUtils.generateRandomPoints(POINT_COUNT);
+        this.allPoints = PointUtils.getReadyPoints();
+        //this.allPoints = PointUtils.generateRandomPoints(POINT_COUNT);
 
         this.convexHullPoints = GrahamAlgorithm.getRoundConvexHull(allPoints);
-        SolutionType solutionType = SolutionType.HELD_KARP_ALGORITHM;
+        SolutionType solutionType = SolutionType.QUASI_OPTIMIZATION_ALGORITHM;
         //SAParameters parameters = new SAParameters(1000,0.01,10000, 0.995, 0.1);
         //this.solutionPoints = TSPSolutionFactory.createSolutionWithParams(SolutionType.SA_ALGORITHM, allPoints, parameters).getSolutionPoints();
-        solutionPoints = TSPSolutionFactory.createSolution(solutionType, allPoints).getSolutionPoints();
+        TSPSolution solution = TSPSolutionFactory.createSolution(solutionType, allPoints);
+        solutionPoints = solution.getSolutionPoints();
         title = solutionType.getName();
+        System.out.println(title + " - długość drogi: " +  solution.getRouteLength());
+
         addSeriesToDataset();
         JFreeChart chart = createChart();
         ChartPanel chartPanel = createChartPanel(chart);
