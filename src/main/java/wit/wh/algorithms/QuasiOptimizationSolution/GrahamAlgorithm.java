@@ -91,8 +91,10 @@ public class GrahamAlgorithm {
      */
     private static Stack<Point> buildConvexHull(ArrayList<Point> sortedPoints) {
         Stack<Point> stack = new Stack<Point>();
-        stack.push(sortedPoints.get(0)); // na stos wkładamy pierwszy punkt
-        stack.push(sortedPoints.get(1)); // na stos wkładamy punkt, który będziemy sprawdzać
+        // na stos wkładamy pierwszy punkt
+        stack.push(sortedPoints.get(0));
+        // na stos wkładamy punkt, który będziemy sprawdzać
+        stack.push(sortedPoints.get(1));
 
         for (int i = 2, size = sortedPoints.size(); i < size; i++) {
             Point next = sortedPoints.get(i);

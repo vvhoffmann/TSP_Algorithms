@@ -18,13 +18,14 @@ public class TestSAParameters {
     // Definiujemy zakres parametrów do testów
     static final int MAX_POINT_COUNT = 15;
     static final int[] pointCounts = {5, 10, MAX_POINT_COUNT};
-    static final double[] startingTemperatures = {5, 10, 20, 25, 50};
-    static final double[] coolingRates = {0.99, 0.995, 0.998, 0.999, 0.9995};
-    static final int[] iterationsOptions = {100, 500, 1000, 2000, 5000};
-    static final double[] stepRates = {0.1, 0.05, 0.01, 0.005, 0.001};
-    static final double[] stoppingTemperatures = {0.1, 0.5, 0.1, 0.01, 0.001}; // stałe
+    static final int[] iterationsOptions = {3000, 500, 1000, 2000, 5000};
+    static final double[] coolingRates = {0.9, 0.95 , 0.99};
+    static final double stepRate = 0.8;
+    static final double startingTemp = 40;
+    static final double stoppingTemp = 0.001;
 
-    final static String fileTitle = "Points\tStartTemp\tStopTemp\tCoolingRate\tIterations\tStepRate\tInitialDistance\tResultDistance";
+
+    final static String fileTitle = "Points\tIterations\tCoolingRate\tInitialDistance\tResultDistance";
 
     public static void main(String[] args) {
         ArrayList<Point> randomPoints = PointUtils.generateRandomPoints(MAX_POINT_COUNT);
@@ -36,29 +37,22 @@ public class TestSAParameters {
                 ArrayList<Point> points = new ArrayList<>(randomPoints.subList(0, pointsCount));
 
                 double startDistance = PathUtils.getRouteLength(points);
-
-                for (double startTemp : startingTemperatures) {
-                    for (double stopTemp : stoppingTemperatures) {
-                        for (double cooling : coolingRates) {
-                            for (int iterations : iterationsOptions) {
-                                for (double stepRate : stepRates) {
-                                    double totalDistance = 0;
-                                    for (int run = 0; run < TEST_RUNS_PER_CONFIG; run++) {
-                                        SAParameters params = new SAParameters(
-                                                startTemp, stopTemp, iterations, cooling, stepRate
-                                        );
-                                        double distance = PathUtils.getRouteLength(
-                                                TSPSolutionFactory.createSolutionWithParams(
-                                                        SolutionType.SA_ALGORITHM, points, params)
-                                        );
-                                        totalDistance += distance;
-                                    }
-                                    double avgDistance = totalDistance / TEST_RUNS_PER_CONFIG;
-
-                                    writeToFile(pointsCount, startTemp, stopTemp, cooling, iterations, stepRate, startDistance, avgDistance, writer);
-                                }
-                            }
+                for (int iterations : iterationsOptions) {
+                    for (double coolingRate : coolingRates) {
+                        double totalDistance = 0;
+                        for (int run = 0; run < TEST_RUNS_PER_CONFIG; run++) {
+                            SAParameters params = new SAParameters(
+                                    startingTemp, stoppingTemp, iterations, coolingRate, stepRate
+                            );
+                            double distance = PathUtils.getRouteLength(
+                                    TSPSolutionFactory.createSolutionWithParams(
+                                            SolutionType.SA_ALGORITHM, points, params)
+                            );
+                            totalDistance += distance;
                         }
+                        double avgDistance = totalDistance / TEST_RUNS_PER_CONFIG;
+
+                        writeToFile(pointsCount, iterations, coolingRate, startDistance, avgDistance, writer);
                     }
                 }
             }
@@ -72,13 +66,10 @@ public class TestSAParameters {
         writer.newLine();
     }
 
-    private static void writeToFile(int pointsCount, double startTemp, double stopTemp, double cooling, int iterations, double stepRate, double startDistance, double avgDistance, BufferedWriter writer) throws IOException {
+    private static void writeToFile(int pointsCount, int iterations, double coolingRate, double startDistance, double avgDistance, BufferedWriter writer) throws IOException {
         String row = pointsCount + "\t" +
-                startTemp + '\t' +
-                stopTemp + '\t' +
-                cooling + '\t' +
                 iterations + '\t' +
-                stepRate + '\t' +
+                coolingRate + '\t' +
                 startDistance + "\t" +
                 avgDistance;
 

@@ -50,9 +50,8 @@ public class Main extends JFrame {
         //this.allPoints = PointUtils.generateRandomPoints(POINT_COUNT);
 
         this.convexHullPoints = GrahamAlgorithm.getRoundConvexHull(allPoints);
-        SolutionType solutionType = SolutionType.QUASI_OPTIMIZATION_ALGORITHM;
-        //SAParameters parameters = new SAParameters(1000,0.01,10000, 0.995, 0.1);
-        //this.solutionPoints = TSPSolutionFactory.createSolutionWithParams(SolutionType.SA_ALGORITHM, allPoints, parameters).getSolutionPoints();
+        SolutionType solutionType = SolutionType.SA_ALGORITHM;
+
         TSPSolution solution = TSPSolutionFactory.createSolution(solutionType, allPoints);
         solutionPoints = solution.getSolutionPoints();
         title = solutionType.getName();

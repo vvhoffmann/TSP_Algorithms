@@ -1,6 +1,8 @@
 package wit.wh.algorithms.ACOSolution;
 
+import wit.wh.algorithms.SolutionType;
 import wit.wh.algorithms.TSPSolution;
+import wit.wh.algorithms.TSPSolutionFactory;
 import wit.wh.utils.PathUtils;
 import wit.wh.utils.Point;
 import wit.wh.utils.PointUtils;
@@ -46,10 +48,8 @@ public class ACOSolution extends TSPSolution {
     @Override
     public ArrayList<Point> getTSPSolution() {
         initialize(inputPoints);
-        int[] result = null;
-        for (int i = 0; i < 5; i++) {
-            result = solve();
-        }
+        int[] result = solve();
+
         return PathUtils.returnRoundPath(buildPointList(result));
     }
     
@@ -59,15 +59,14 @@ public class ACOSolution extends TSPSolution {
     private void initialize(ArrayList<Point> inputPoints) {
         this.inputPoints = inputPoints;
         this.numberOfPoints = inputPoints.size();
-        this.numberOfAnts = (int) (numberOfPoints * ((ACOParameters) parameters()).antFactor());
+        this.numberOfAnts = Math.max(inputPoints.size(), 10);
         this.graph = generateDistanceMatrix(inputPoints);
         this.trails = new double[numberOfPoints][numberOfPoints];
         this.probabilities = new double[numberOfPoints];
         this.ants = new ArrayList<>();
 
-        for (int i = 0; i < numberOfAnts; i++) {
+        for (int i = 0; i < numberOfAnts; i++)
             ants.add(new Ant(numberOfPoints));
-        }
     }
 
     /**
@@ -102,7 +101,7 @@ public class ACOSolution extends TSPSolution {
      */
     public int[] solve() {
         resetAnts();
-        initializeTrails();
+        initializeTrailsWithPheromoneLevel(inputPoints);
 
         for (int i = 0; i < parameters().numberOfIterations(); i++) {
             moveAnts();
@@ -125,12 +124,19 @@ public class ACOSolution extends TSPSolution {
     }
 
     /**
-     * Initializes all pheromone trails to a constant value.
+     * Initializes all pheromone trails to starting pheromone level by NN algorithm
      */
-    private void initializeTrails() {
-        for (int i = 0; i < numberOfPoints; i++) {
-            Arrays.fill(trails[i], ((ACOParameters) parameters()).initialPheromoneLevel());
-        }
+    private void initializeTrailsWithPheromoneLevel(ArrayList<Point> points) {
+        double cnn = getCnn(points);
+        double startingPheromoneLevel = 1.0 / (numberOfPoints*cnn);
+
+        for (int i = 0; i < numberOfPoints; i++)
+            Arrays.fill(trails[i], startingPheromoneLevel);
+
+    }
+
+    private static double getCnn(ArrayList<Point> points) {
+        return PathUtils.getRouteLength(TSPSolutionFactory.createSolution(SolutionType.NEAREST_NEIGHBOUR_ALGORITHM, points));
     }
 
     /**
@@ -198,7 +204,6 @@ public class ACOSolution extends TSPSolution {
             }
         }
 
-        // Normalize probabilities
         if (sum > 0) {
             for (int i = 0; i < numberOfPoints; i++) {
                 probabilities[i] /= sum;
@@ -210,14 +215,12 @@ public class ACOSolution extends TSPSolution {
      * Updates pheromone trails after all ants complete their tours.
      */
     private void updatePheromones() {
-        // Evaporation
         for (int i = 0; i < numberOfPoints; i++) {
             for (int j = 0; j < numberOfPoints; j++) {
                 trails[i][j] *= ((ACOParameters) parameters()).evaporation();
             }
         }
 
-        // Deposit
         for (Ant ant : ants) {
             double contribution = ((ACOParameters) parameters()).Q() / ant.getTrailLength(graph);
             for (int i = 0; i < numberOfPoints - 1; i++) {

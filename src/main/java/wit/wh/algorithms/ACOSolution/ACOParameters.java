@@ -1,6 +1,6 @@
 package wit.wh.algorithms.ACOSolution;
 
-import wit.wh.algorithms.AlgoritmParameters;
+import wit.wh.algorithms.Parameters;
 
 /**
  * Represents the configuration parameters for the Ant Colony Optimization (ACO) algorithm.
@@ -17,70 +17,47 @@ import wit.wh.algorithms.AlgoritmParameters;
  * </ul>
  * </p>
  */
-public class ACOParameters extends AlgoritmParameters {
-
-    /** Constant scaling factor for pheromone trail matrix. */
-    private double initialPheromoneLevel = 1.0;
+public class ACOParameters extends Parameters {
 
     /** Importance of pheromone concentration (α). */
-    private double alpha = 1;
+    private double alpha = 1.0;
 
     /** Importance of heuristic desirability / distance (β). */
-    private double beta = 5;
+    private double beta = 5.0;
 
     /** Pheromone evaporation rate per iteration. */
-    private double evaporation = 0.5;
+    private double evaporation = 0.1;
 
     /** Amount of pheromone deposited by each ant. */
-    private double Q = 500;
-
-    /** Proportion of ants to nodes in the graph. */
-    private double antFactor = 0.8;
+    private double Q = 100;
 
     /** Degree of randomness in ant decision-making. */
     private double randomFactor = 0.01;
-
-    /** Maximum number of iterations the algorithm will execute. */
-    //private int numberOfIterations = 500;
 
     /**
      * Constructs a default set of parameters for the ACO algorithm.
      */
     public ACOParameters() {
-        super(500);
+        super(100);
     }
 
     /**
      * Constructs a custom configuration for the ACO algorithm.
      *
-     * @param initialPheromoneLevel             constant scaling factor for trails
      * @param alpha         pheromone importance
      * @param beta          distance/heuristic importance
      * @param evaporation   rate at which pheromones evaporate
      * @param Q             amount of pheromone deposited
-     * @param antFactor     number of ants relative to problem size
      * @param randomFactor  randomness in path selection
      * @param maxIterations maximum number of iterations
      */
-    public ACOParameters(double initialPheromoneLevel, double alpha, double beta, double evaporation, double Q,
-                         double antFactor, double randomFactor, int maxIterations) {
+    public ACOParameters(double alpha, double beta, double evaporation, double Q, double randomFactor, int maxIterations) {
         super(maxIterations);
-        this.initialPheromoneLevel = initialPheromoneLevel;
         this.alpha = alpha;
         this.beta = beta;
         this.evaporation = evaporation;
         this.Q = Q;
-        this.antFactor = antFactor;
         this.randomFactor = randomFactor;
-    }
-
-    /**
-     * Returns the constant scaling factor used for trail initialization.
-     *
-     * @return the trail constant
-     */
-    public double initialPheromoneLevel() {
-        return initialPheromoneLevel;
     }
 
     /**
@@ -123,15 +100,6 @@ public class ACOParameters extends AlgoritmParameters {
      * Returns the ratio of ants to nodes.
      *
      * @return ant population factor
-     */
-    public double antFactor() {
-        return antFactor;
-    }
-
-    /**
-     * Returns the random factor used to diversify ant path choices.
-     *
-     * @return randomness factor
      */
     public double randomFactor() {
         return randomFactor;

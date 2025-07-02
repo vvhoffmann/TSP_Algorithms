@@ -54,7 +54,7 @@ public class TSPSolutionFactory {
      * @return             an instance of {@link TSPSolution} using the selected algorithm and parameters
      * @throws IllegalArgumentException if the provided type is not supported for parameterized creation
      */
-    public static TSPSolution createSolutionWithParams(SolutionType type, ArrayList<Point> inputPoints, AlgoritmParameters parameters) {
+    public static TSPSolution createSolutionWithParams(SolutionType type, ArrayList<Point> inputPoints, Parameters parameters) {
         return switch (type) {
             case SA_ALGORITHM ->
                     new SASolution(inputPoints, (SAParameters) parameters);

@@ -16,7 +16,7 @@ public abstract class TSPSolution {
     /**
      * The parameters used for algorithm configuration (optional, can be null).
      */
-    protected AlgoritmParameters parameters = null;
+    protected Parameters parameters = null;
 
     /**
      * The computed list of points forming the TSP solution path.
@@ -34,7 +34,7 @@ public abstract class TSPSolution {
      * @param inputPoints the input list of points representing cities
      * @param parameters  the parameters used to configure the solving algorithm
      */
-    public TSPSolution(ArrayList<Point> inputPoints, AlgoritmParameters parameters) {
+    public TSPSolution(ArrayList<Point> inputPoints, Parameters parameters) {
         this.inputPoints = inputPoints;
         this.parameters = parameters;
         this.solutionPoints = setSolutionPoints();
@@ -98,7 +98,7 @@ public abstract class TSPSolution {
      *
      * @return the algorithm parameters or null if none were used
      */
-    public AlgoritmParameters parameters() {
+    public Parameters parameters() {
         return parameters;
     }
 }

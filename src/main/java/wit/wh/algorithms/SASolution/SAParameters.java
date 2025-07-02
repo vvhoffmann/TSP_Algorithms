@@ -1,6 +1,6 @@
 package wit.wh.algorithms.SASolution;
 
-import wit.wh.algorithms.AlgoritmParameters;
+import wit.wh.algorithms.Parameters;
 
 /**
  * Represents the configuration parameters for the Simulated Annealing algorithm.
@@ -9,22 +9,19 @@ import wit.wh.algorithms.AlgoritmParameters;
  * bounds, iteration count, cooling rate, and the probability of accepting worse solutions.
  * </p>
  */
-public class SAParameters extends AlgoritmParameters {
+public class SAParameters extends Parameters {
 
     /** Initial temperature for the algorithm. Higher values allow more exploration. */
-    private double startingTemperature = 10;
+    private double startingTemperature = 40;
 
     /** Final temperature at which the algorithm stops. Lower values mean more exploitation. */
-    private double stoppingTemperature = 0.1;
-
-    /** Number of iterations the algorithm will perform. */
-    //private int numberOfIterations = 500;
+    private double stoppingTemperature = 0.001;
 
     /** Rate at which the temperature decreases after each iteration. */
-    private double coolingRate = 0.995;
+    private double coolingRate = 0.99;
 
     /** A scaling factor affecting the probability of accepting worse solutions. */
-    private double stepRate = 0.01;
+    private double stepRate = 0.8;
 
     /**
      * Constructs a set of Simulated Annealing parameters with custom values.
@@ -48,7 +45,7 @@ public class SAParameters extends AlgoritmParameters {
      * Constructs a default set of parameters with preset values.
      */
     public SAParameters() {
-        super(500);
+        super(2000);
     }
 
     /**

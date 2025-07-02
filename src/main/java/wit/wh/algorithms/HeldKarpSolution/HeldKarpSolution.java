@@ -43,7 +43,7 @@ public class HeldKarpSolution extends TSPSolution {
         fillDPTable(dp, parent, dist, n, N);
         int lastCity = findLastCity(dp, dist, n, N);
         ArrayList<Point> solutionPath = reconstructPath(parent, N - 1, lastCity, inputPoints);
-        solutionPath.add(inputPoints.get(0)); // Return to start
+        solutionPath.add(inputPoints.get(0));
 
         return solutionPath;
     }
@@ -58,7 +58,7 @@ public class HeldKarpSolution extends TSPSolution {
     private double[][] initializeDPTable(int N, int n) {
         double[][] dp = new double[N][n];
         for (double[] row : dp) Arrays.fill(row, INF);
-        dp[1][0] = 0; // Start from city 0
+        dp[1][0] = 0;
         return dp;
     }
 
