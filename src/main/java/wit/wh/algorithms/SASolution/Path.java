@@ -8,6 +8,12 @@ import java.util.ArrayList;
 /**
  * Represents a path consisting of a list of points.
  * Provides functionality to randomly swap points and calculate the total distance of the path.
+ *
+ * * Source inspiration:
+ *  * <ul>
+ *  *     <li><a href="https://github.com/RonitRay/Ant-Colony-Optimization">...</a></li>
+ *  *     <li>https://www.baeldung.com/java-ant-colony-optimization</li>
+ *  * </ul>
  */
 public class Path {
 

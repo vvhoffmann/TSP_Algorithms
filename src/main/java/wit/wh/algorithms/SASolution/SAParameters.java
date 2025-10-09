@@ -12,7 +12,7 @@ import wit.wh.algorithms.Parameters;
 public class SAParameters extends Parameters {
 
     /** Initial temperature for the algorithm. Higher values allow more exploration. */
-    private double startingTemperature = 40;
+    private double initialTemperature = 40;
 
     /** Final temperature at which the algorithm stops. Lower values mean more exploitation. */
     private double stoppingTemperature = 0.001;
@@ -26,16 +26,16 @@ public class SAParameters extends Parameters {
     /**
      * Constructs a set of Simulated Annealing parameters with custom values.
      *
-     * @param startingTemperature   the starting temperature
+     * @param initialTemperature   the starting temperature
      * @param stoppingTemperature   the stopping temperature
      * @param numberOfIterations    number of iterations to perform
      * @param coolingRate           the cooling rate to apply per iteration
      * @param stepRate              the probability step rate for accepting worse solutions
      */
-    public SAParameters(double startingTemperature, double stoppingTemperature,
+    public SAParameters(double initialTemperature, double stoppingTemperature,
                         int numberOfIterations, double coolingRate, double stepRate) {
         super(numberOfIterations);
-        this.startingTemperature = startingTemperature;
+        this.initialTemperature = initialTemperature;
         this.stoppingTemperature = stoppingTemperature;
         this.coolingRate = coolingRate;
         this.stepRate = stepRate;
@@ -53,8 +53,8 @@ public class SAParameters extends Parameters {
      *
      * @return starting temperature
      */
-    public double startingTemperature() {
-        return startingTemperature;
+    public double initialTemperature() {
+        return initialTemperature;
     }
 
     /**

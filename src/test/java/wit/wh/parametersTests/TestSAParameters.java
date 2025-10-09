@@ -21,7 +21,7 @@ public class TestSAParameters {
     static final int[] iterationsOptions = {3000, 500, 1000, 2000, 5000};
     static final double[] coolingRates = {0.9, 0.95 , 0.99};
     static final double stepRate = 0.8;
-    static final double startingTemp = 40;
+    static final double initialTemperature = 40;
     static final double stoppingTemp = 0.001;
 
 
@@ -42,7 +42,7 @@ public class TestSAParameters {
                         double totalDistance = 0;
                         for (int run = 0; run < TEST_RUNS_PER_CONFIG; run++) {
                             SAParameters params = new SAParameters(
-                                    startingTemp, stoppingTemp, iterations, coolingRate, stepRate
+                                    initialTemperature, stoppingTemp, iterations, coolingRate, stepRate
                             );
                             double distance = PathUtils.getRouteLength(
                                     TSPSolutionFactory.createSolutionWithParams(

@@ -37,8 +37,19 @@ public class RepetitiveNearestNeighbourSolution extends TSPSolution {
         double minDistance = Double.MAX_VALUE;
 
         ArrayList<Point> bestSolution = new ArrayList<>();
+        int i=1;
         for (Point p : inputPoints) {
+
+
+            long startTime = System.nanoTime();
+
+            //wykonanie algorytmu
             ArrayList<Point> solution = NearestNeighbourSolution.getTSPSolutionBasedOnStartingPoint(inputPoints,p);
+
+            // czas wykonania algorytmu w milisekundach.
+            double executionTime = (System.nanoTime() - startTime) / 1000000.0;
+
+            System.out.println(i++ + " " + executionTime);
             if(getRouteLength(solution) < minDistance)
             {
                 minDistance = getRouteLength(solution);

@@ -11,6 +11,12 @@ import java.util.ArrayList;
  * <p>
  * This algorithm probabilistically accepts worse solutions as it explores the search space,
  * gradually reducing the probability of doing so as the "temperature" decreases.
+ *
+ * Source inspiration:
+ * <ul>
+ *     <li><a href="https://github.com/RonitRay/Ant-Colony-Optimization">...</a></li>
+ *     <li>https://www.baeldung.com/java-ant-colony-optimization</li>
+ * </ul>
  * </p>
  */
 public class SASolution extends TSPSolution {
@@ -50,7 +56,7 @@ public class SASolution extends TSPSolution {
      */
     public ArrayList<Point> getTSPSolution() {
         initializePath();
-        double currentTemperature = ((SAParameters) parameters).startingTemperature();
+        double currentTemperature = ((SAParameters) parameters).initialTemperature();
 
         for (int i = 0; i < parameters.numberOfIterations(); ++i) {
             if (isAboveStoppingTemperature(currentTemperature)) {

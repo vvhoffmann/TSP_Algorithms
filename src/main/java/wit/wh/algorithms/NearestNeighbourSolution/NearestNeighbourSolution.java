@@ -45,7 +45,7 @@ public class NearestNeighbourSolution extends TSPSolution {
         if(inputPoints.size() < PathUtils.MIN_POINTS_TO_RUN_ALGORITHM)
             return inputPoints;
 
-        return buildSolution(inputPoints, inputPoints.get(0));
+        return buildSolution(inputPoints, inputPoints.get(3));
     }
 
     /**

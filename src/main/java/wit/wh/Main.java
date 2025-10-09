@@ -33,7 +33,7 @@ import java.util.ArrayList;
  * and displays the result in a Swing window.
  */
 public class Main extends JFrame {
-    private static final int POINT_COUNT = 15;
+    private static final int POINT_COUNT = 150;
     private static final int WINDOW_SIZE = 850;
 
     private final XYSeriesCollection dataset = new XYSeriesCollection();
@@ -46,11 +46,11 @@ public class Main extends JFrame {
      * Constructs the main window and initializes the TSP and Convex Hull solutions.
      */
     public Main() {
-        this.allPoints = PointUtils.getReadyPoints();
-        //this.allPoints = PointUtils.generateRandomPoints(POINT_COUNT);
+        //this.allPoints = PointUtils.getReadyPoints();
+        this.allPoints = PointUtils.generateRandomPoints(POINT_COUNT);
 
         this.convexHullPoints = GrahamAlgorithm.getRoundConvexHull(allPoints);
-        SolutionType solutionType = SolutionType.SA_ALGORITHM;
+        SolutionType solutionType = SolutionType.QUASI_OPTIMIZATION_ALGORITHM;
 
         TSPSolution solution = TSPSolutionFactory.createSolution(solutionType, allPoints);
         solutionPoints = solution.getSolutionPoints();
@@ -152,8 +152,9 @@ public class Main extends JFrame {
         for (int i = solutionPoints.size() -1; i < solutionPoints.size() + convexHullPoints.size() ; ++i) {
             renderer.setSeriesPaint(i, Color.RED);
             renderer.setSeriesItemLabelsVisible(i, true);
-            renderer.setSeriesItemLabelFont(i, renderer.getBaseItemLabelFont().deriveFont(14f));
+            renderer.setSeriesItemLabelFont(i, new Font("SansSerif", Font.BOLD, 16));
             renderer.setSeriesVisibleInLegend(i, true);
+            renderer.setSeriesStroke(i, new BasicStroke(2.0f));
         }
     }
 
@@ -166,8 +167,9 @@ public class Main extends JFrame {
         for (int i = 0; i < solutionPoints.size(); ++i) {
             renderer.setSeriesPaint(i, Color.YELLOW);
             renderer.setSeriesItemLabelsVisible(i, true);
-            renderer.setSeriesItemLabelFont(i, renderer.getBaseItemLabelFont().deriveFont(14f));
+            renderer.setSeriesItemLabelFont(i, new Font("SansSerif", Font.BOLD, 16));
             renderer.setSeriesVisibleInLegend(i, true);
+            renderer.setSeriesStroke(i, new BasicStroke(3.0f));
         }
     }
 
@@ -182,8 +184,8 @@ public class Main extends JFrame {
             String label = i + " " + allPoints.get(i).toString();
 
             XYTextAnnotation annotation = new XYTextAnnotation(label, p.getX(), p.getY());
-            annotation.setFont(new Font("TimesRoman", Font.PLAIN, 14));
-            annotation.setPaint(Color.DARK_GRAY);
+            annotation.setFont(new Font("TimesRoman", Font.PLAIN, 16));
+            annotation.setPaint(Color.BLACK);
             annotation.setTextAnchor(TextAnchor.TOP_CENTER);
             plot.addAnnotation(annotation);
         }
